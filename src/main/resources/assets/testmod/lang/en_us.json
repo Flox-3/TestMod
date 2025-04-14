@@ -1,4 +1,9 @@
 {
   "item.testmod.raw_osmium": "Raw Osmium",
-  "item.testmod.osmium_ingot": "Osmium Ingot"
+  "item.testmod.osmium_ingot": "Osmium Ingot",
+
+  "block.testmod.osmium_ore": "Osmium Ore",
+  "block.testmod.deepslate_osmium_ore": "Deepslate Osmium Ore",
+  "block.testmod.raw_osmium_block": "Block of Raw Osmium",
+  "block.testmod.osmium_block": "Block of Osmium"
 }
