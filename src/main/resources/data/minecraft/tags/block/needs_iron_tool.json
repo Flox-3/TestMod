@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "testmod:osmium_ore",
+    "testmod:deepslate_osmium_ore",
+    "testmod:osmium_block",
+    "testmod:raw_osmium_block"
+  ]
+}

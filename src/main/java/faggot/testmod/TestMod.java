@@ -1,6 +1,7 @@
 package faggot.testmod;
 
 import faggot.testmod.block.ModBlocks;
+import faggot.testmod.item.ModItemGroups;
 import faggot.testmod.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 
@@ -21,6 +22,7 @@ public class TestMod implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		ModItemGroups.registerItemGroups();
 
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();

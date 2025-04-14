@@ -5,5 +5,7 @@
   "block.testmod.osmium_ore": "Osmium Ore",
   "block.testmod.deepslate_osmium_ore": "Deepslate Osmium Ore",
   "block.testmod.raw_osmium_block": "Block of Raw Osmium",
-  "block.testmod.osmium_block": "Block of Osmium"
+  "block.testmod.osmium_block": "Block of Osmium",
+
+  "itemgroup.testmod.test_mod_items_and_blocks": "Test Mod Items & Blocks"
 }
