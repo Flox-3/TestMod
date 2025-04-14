@@ -21,6 +21,7 @@ public class TestMod implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 	}
