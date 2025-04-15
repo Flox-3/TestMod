@@ -3,6 +3,7 @@
   "item.testmod.osmium_ingot": "Osmium Ingot",
 
   "item.testmod.chisel": "Chisel",
+  "item.testmod.crack": "Crack",
 
   "block.testmod.osmium_ore": "Osmium Ore",
   "block.testmod.deepslate_osmium_ore": "Deepslate Osmium Ore",
@@ -11,5 +12,12 @@
 
   "block.testmod.magic_block": "Magic Block",
 
-  "itemgroup.testmod.test_mod_items_and_blocks": "Test Mod Items & Blocks"
+  "itemgroup.testmod.test_mod_items_and_blocks": "Test Mod Items & Blocks",
+
+  "tooltip.testmod.magic_block.tooltip": "Block to produce §9Magical Substance§r",
+
+  "tooltip.testmod.crack.tooltip": "Magical Substance",
+
+  "tooltip.testmod.chisel.tooltip": "Press §eShift§r for more Information",
+  "tooltip.testmod.chisel.tooltip_shift": "This item chisels blocks into Bricks"
 }

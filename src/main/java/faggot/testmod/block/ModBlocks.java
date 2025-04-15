@@ -35,7 +35,7 @@ public class ModBlocks {
             new net.minecraft.block.Block(AbstractBlock.Settings.create( ).strength(3f)
                     .requiresTool().sounds(BlockSoundGroup.METAL)));
 
-    public static final Block MAGIC_BLOCK = registerBlock("magic_blcok",
+    public static final Block MAGIC_BLOCK = registerBlock("magic_block",
             new MagicBlock(AbstractBlock.Settings.create().strength(3f).requiresTool()));
 
 

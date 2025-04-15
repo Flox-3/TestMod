@@ -1,0 +1,9 @@
+{
+  "values": [
+    "testmod:osmium_ore",
+    "testmod:deepslate_osmium_ore",
+    "testmod:raw_osmium_block",
+    "testmod:osmium_block",
+    "testmod:magic_block"
+  ]
+}

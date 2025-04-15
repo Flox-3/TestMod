@@ -24,6 +24,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.DEEPSLATE_OSMIUM_ORE);
                         entries.add(ModBlocks.MAGIC_BLOCK);
                         entries.add(ModItems.CHISEL);
+                        entries.add(ModItems.CRACK);
                     })
 
                     .build());
