@@ -23,6 +23,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.MAGIC_BLOCK);
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
-                .add(ModBlocks.DEEPSLATE_OSMIUM_ORE);
+                .add(ModBlocks.OSMIUM_ORE)
+                .add(ModBlocks.DEEPSLATE_OSMIUM_ORE)
+                .add(ModBlocks.RAW_OSMIUM_BLOCK)
+                .add(ModBlocks.OSMIUM_BLOCK)
+                .add(ModBlocks.MAGIC_BLOCK);
     }
 }
