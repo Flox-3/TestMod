@@ -1,0 +1,6 @@
+{
+  "parent": "testmod:item/staff",
+  "textures": {
+    "layer0": "testmod:item/staff_pulling_2"
+  }
+}

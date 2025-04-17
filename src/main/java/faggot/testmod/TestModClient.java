@@ -1,6 +1,7 @@
 package faggot.testmod;
 
 import faggot.testmod.block.ModBlocks;
+import faggot.testmod.util.ModModelPredicates;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.client.render.RenderLayer;
@@ -11,5 +12,6 @@ public class TestModClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.OSMIUM_DOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.OSMIUM_TRAPDOOR, RenderLayer.getCutout());
 
+        ModModelPredicates.registerModelPredicates();
     }
 }

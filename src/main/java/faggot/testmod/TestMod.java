@@ -6,7 +6,12 @@ import faggot.testmod.item.ModItemGroups;
 import faggot.testmod.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.item.Items;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,5 +37,19 @@ public class TestMod implements ModInitializer {
 		ModDataComponentTypes.registerDataComponentTypes();
 
 		FuelRegistry.INSTANCE.add(ModItems.CRACK, 1000);
+
+		AttackEntityCallback.EVENT.register((playerEntity, world, hand, entity, entityHitResult) -> {
+			if (entity instanceof SheepEntity sheepEntity) {
+				if (playerEntity.getMainHandStack().getItem() == Items.END_ROD) {
+					playerEntity.sendMessage(Text.literal("hehe"));
+					playerEntity.getMainHandStack().decrement(1);
+				}
+
+				return ActionResult.PASS;
+			}
+
+
+			return ActionResult.PASS;
+		});
 	}
 }

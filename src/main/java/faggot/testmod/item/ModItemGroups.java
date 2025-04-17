@@ -34,6 +34,13 @@ public class ModItemGroups {
                         entries.add(ModBlocks.OSMIUM_PRESSURE_PLATE);
                         entries.add(ModBlocks.OSMIUM_LOADING_BAR);
 
+                        entries.add(ModItems.OSMIUM_SWORD);
+                        entries.add(ModItems.OSMIUM_SHOVEL);
+                        entries.add(ModItems.OSMIUM_PICKAXE);
+                        entries.add(ModItems.OSMIUM_AXE);
+                        entries.add(ModItems.OSMIUM_HOE);
+
+                        entries.add(ModItems.STAFF);
 
                         entries.add(ModItems.CHISEL);
                         entries.add(ModItems.CRACK);

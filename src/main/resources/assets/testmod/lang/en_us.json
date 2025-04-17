@@ -22,6 +22,15 @@
   "osmium_loading_bar": "Osmium Loading Bar",
 
 
+  "osmium_sword": "Osmium Sword",
+  "osmium_shovel": "Osmium Shovel",
+  "osmium_pickaxe": "Osmium Pickaxe",
+  "osmium_axe": "Osmium Axe",
+  "osmium_hoe": "Osmium Hoe",
+
+  "staff": "Staff",
+
+
 
   "block.testmod.magic_block": "Magic Block",
 

@@ -1,6 +1,7 @@
 package faggot.testmod.datagen;
 
 import faggot.testmod.block.ModBlocks;
+import faggot.testmod.util.ModTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.registry.RegistryWrapper;
@@ -44,5 +45,9 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.FENCES).add(ModBlocks.OSMIUM_FENCE);
         getOrCreateTagBuilder(BlockTags.FENCE_GATES).add(ModBlocks.OSMIUM_FENCE_GATE);
         getOrCreateTagBuilder(BlockTags.WALLS).add(ModBlocks.OSMIUM_WALL);
+
+        getOrCreateTagBuilder(ModTags.Blocks.NEEDS_OSMIUM_TOOL)
+                .addTag(BlockTags.NEEDS_IRON_TOOL);
+        getOrCreateTagBuilder(ModTags.Blocks.INCORRECT_FOR_OSMIUM_TOOL);
     }
 }

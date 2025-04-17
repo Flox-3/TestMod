@@ -44,6 +44,13 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.RAW_OSMIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.OSMIUM_INGOT, Models.GENERATED);
         itemModelGenerator.register(ModItems.CRACK, Models.GENERATED);
-        itemModelGenerator.register(ModItems.CHISEL, Models.GENERATED);
+        //itemModelGenerator.register(ModItems.CHISEL, Models.GENERATED);
+
+
+        itemModelGenerator.register(ModItems.OSMIUM_SWORD, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.OSMIUM_SHOVEL, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.OSMIUM_PICKAXE, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.OSMIUM_AXE, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.OSMIUM_HOE, Models.HANDHELD);
     }
 }

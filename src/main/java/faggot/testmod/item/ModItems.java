@@ -2,10 +2,9 @@ package faggot.testmod.item;
 
 import faggot.testmod.TestMod;
 import faggot.testmod.item.custom.ChiselItem;
+import faggot.testmod.item.custom.StaffItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -27,6 +26,26 @@ public class ModItems {
             super.appendTooltip(stack, context, tooltip, type);
         }
     });
+
+    //Osmium Tools
+    public static final Item OSMIUM_SWORD = registerItem("osmium_sword",
+            new SwordItem(ModToolMaterials.OSMIUM, new Item.Settings()
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.OSMIUM, 3, -1f))));
+    public static final Item OSMIUM_SHOVEL = registerItem("osmium_shovel",
+            new ShovelItem(ModToolMaterials.OSMIUM, new Item.Settings()
+                    .attributeModifiers(ShovelItem.createAttributeModifiers(ModToolMaterials.OSMIUM, 1.5f, -2.8F))));
+    public static final Item OSMIUM_PICKAXE = registerItem("osmium_pickaxe",
+            new PickaxeItem(ModToolMaterials.OSMIUM, new Item.Settings()
+                    .attributeModifiers(PickaxeItem.createAttributeModifiers(ModToolMaterials.OSMIUM, 1.0F, -2.6F))));
+    public static final Item OSMIUM_AXE = registerItem("osmium_axe",
+            new AxeItem(ModToolMaterials.OSMIUM, new Item.Settings()
+                    .attributeModifiers(AxeItem.createAttributeModifiers(ModToolMaterials.OSMIUM, 6.2F, -2.8F))));
+    public static final Item OSMIUM_HOE = registerItem("osmium_hoe",
+            new HoeItem(ModToolMaterials.OSMIUM, new Item.Settings()
+                    .attributeModifiers(HoeItem.createAttributeModifiers(ModToolMaterials.OSMIUM, 0.2F, -3.0F))));
+
+    public static final Item STAFF = registerItem("staff",
+            new StaffItem(new Item.Settings().maxDamage(500)));
 
 
 
