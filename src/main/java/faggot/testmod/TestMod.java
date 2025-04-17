@@ -1,6 +1,7 @@
 package faggot.testmod;
 
 import faggot.testmod.block.ModBlocks;
+import faggot.testmod.component.ModDataComponentTypes;
 import faggot.testmod.item.ModItemGroups;
 import faggot.testmod.item.ModItems;
 import net.fabricmc.api.ModInitializer;
@@ -27,6 +28,8 @@ public class TestMod implements ModInitializer {
 
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
+
+		ModDataComponentTypes.registerDataComponentTypes();
 
 		FuelRegistry.INSTANCE.add(ModItems.CRACK, 1000);
 	}

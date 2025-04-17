@@ -20,13 +20,29 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.DEEPSLATE_OSMIUM_ORE)
                 .add(ModBlocks.RAW_OSMIUM_BLOCK)
                 .add(ModBlocks.OSMIUM_BLOCK)
-                .add(ModBlocks.MAGIC_BLOCK);
+                .add(ModBlocks.MAGIC_BLOCK)
+                .add(ModBlocks.OSMIUM_STAIRS)
+                .add(ModBlocks.OSMIUM_SLAB)
+                .add(ModBlocks.OSMIUM_FENCE)
+                .add(ModBlocks.OSMIUM_FENCE_GATE)
+                .add(ModBlocks.OSMIUM_DOOR)
+                .add(ModBlocks.OSMIUM_TRAPDOOR);        ;
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.OSMIUM_ORE)
                 .add(ModBlocks.DEEPSLATE_OSMIUM_ORE)
                 .add(ModBlocks.RAW_OSMIUM_BLOCK)
                 .add(ModBlocks.OSMIUM_BLOCK)
-                .add(ModBlocks.MAGIC_BLOCK);
+                .add(ModBlocks.MAGIC_BLOCK)
+                .add(ModBlocks.OSMIUM_STAIRS)
+                .add(ModBlocks.OSMIUM_SLAB)
+                .add(ModBlocks.OSMIUM_FENCE)
+                .add(ModBlocks.OSMIUM_FENCE_GATE)
+                .add(ModBlocks.OSMIUM_DOOR)
+                .add(ModBlocks.OSMIUM_TRAPDOOR);
+
+        getOrCreateTagBuilder(BlockTags.FENCES).add(ModBlocks.OSMIUM_FENCE);
+        getOrCreateTagBuilder(BlockTags.FENCE_GATES).add(ModBlocks.OSMIUM_FENCE_GATE);
+        getOrCreateTagBuilder(BlockTags.WALLS).add(ModBlocks.OSMIUM_WALL);
     }
 }

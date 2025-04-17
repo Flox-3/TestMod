@@ -23,6 +23,18 @@ public class ModItemGroups {
                         entries.add(ModBlocks.OSMIUM_ORE);
                         entries.add(ModBlocks.DEEPSLATE_OSMIUM_ORE);
                         entries.add(ModBlocks.MAGIC_BLOCK);
+                        entries.add(ModBlocks.OSMIUM_STAIRS);
+                        entries.add(ModBlocks.OSMIUM_SLAB);
+                        entries.add(ModBlocks.OSMIUM_FENCE);
+                        entries.add(ModBlocks.OSMIUM_FENCE_GATE);
+                        entries.add(ModBlocks.OSMIUM_WALL);
+                        entries.add(ModBlocks.OSMIUM_DOOR);
+                        entries.add(ModBlocks.OSMIUM_TRAPDOOR);
+                        entries.add(ModBlocks.OSMIUM_BUTTON);
+                        entries.add(ModBlocks.OSMIUM_PRESSURE_PLATE);
+                        entries.add(ModBlocks.OSMIUM_LOADING_BAR);
+
+
                         entries.add(ModItems.CHISEL);
                         entries.add(ModItems.CRACK);
                     })

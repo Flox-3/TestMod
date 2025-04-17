@@ -1,3 +1,6 @@
-// 1.21	2025-04-15T20:59:24.8515738	Test Mod/Tags for minecraft:block
-12c7d17e4c1a3e93e2e6978958ee756dea9c3245 data\minecraft\tags\block\needs_iron_tool.json
-12c7d17e4c1a3e93e2e6978958ee756dea9c3245 data\minecraft\tags\block\mineable\pickaxe.json
+// 1.21	2025-04-17T14:07:42.8241903	Test Mod/Tags for minecraft:block
+7890eb1a055ea1b4b28cb4a6f8f638f736caa527 data\minecraft\tags\block\fences.json
+1ead2cfff4822a96cc789bb9f4adf7aaf1ac1828 data\minecraft\tags\block\walls.json
+e00c31f7e5d7c57e771df6273a6273fe7736fcb5 data\minecraft\tags\block\fence_gates.json
+3d297884bafab7c3ff9e2f1a5e10278e772687d2 data\minecraft\tags\block\needs_iron_tool.json
+3d297884bafab7c3ff9e2f1a5e10278e772687d2 data\minecraft\tags\block\mineable\pickaxe.json

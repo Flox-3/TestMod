@@ -10,6 +10,19 @@
   "block.testmod.raw_osmium_block": "Block of Raw Osmium",
   "block.testmod.osmium_block": "Block of Osmium",
 
+  "block.testmod.osmium_stairs": "Osmium Stairs",
+  "block.testmod.osmium_slab": "Osmium Slab",
+  "block.testmod.osmium_fence": "Osmium Fence",
+  "block.testmod.osmium_fence_gate": "Osmium Fence Gate",
+  "block.testmod.osmium_wall": "Osmium Wall",
+  "block.testmod.osmium_door": "Osmium Door",
+  "block.testmod.osmium_trapdoor": "Osmium Trapdoor",
+  "block.testmod.osmium_button": "Osmium Button",
+  "block.testmod.osmium_pressure_plate": "Osmium Pressure Plate",
+  "osmium_loading_bar": "Osmium Loading Bar",
+
+
+
   "block.testmod.magic_block": "Magic Block",
 
   "itemgroup.testmod.test_mod_items_and_blocks": "Test Mod Items & Blocks",

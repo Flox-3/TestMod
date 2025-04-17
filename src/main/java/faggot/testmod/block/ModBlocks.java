@@ -3,11 +3,10 @@ package faggot.testmod.block;
 
 import faggot.testmod.TestMod;
 import faggot.testmod.block.custom.MagicBlock;
+import faggot.testmod.block.custom.OsmiumLoadingBar;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.ExperienceDroppingBlock;
+import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
@@ -37,6 +36,39 @@ public class ModBlocks {
 
     public static final Block MAGIC_BLOCK = registerBlock("magic_block",
             new MagicBlock(AbstractBlock.Settings.create().strength(3f).requiresTool()));
+
+    public static final Block OSMIUM_LOADING_BAR = registerBlock("osmium_loading_bar",
+            new OsmiumLoadingBar(AbstractBlock.Settings.create().strength(3f).requiresTool()
+                    .luminance(state -> state.get(OsmiumLoadingBar.CLICKED)? 15 : 0)));
+
+    //Non-Block Blocks
+    public static final Block OSMIUM_STAIRS = registerBlock("osmium_stairs",
+            new StairsBlock(ModBlocks.OSMIUM_BLOCK.getDefaultState(),
+                    AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.METAL)));
+    public static final Block OSMIUM_SLAB = registerBlock("osmium_slab",
+            new SlabBlock(AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.METAL)));
+
+    public static final Block OSMIUM_BUTTON = registerBlock("osmium_button",
+            new ButtonBlock(BlockSetType.IRON,2,
+                    AbstractBlock.Settings.create().strength(2f).sounds(BlockSoundGroup.METAL).noCollision()));
+    public static final Block OSMIUM_PRESSURE_PLATE = registerBlock("osmium_pressure_plate",
+            new PressurePlateBlock(BlockSetType.IRON,
+                    AbstractBlock.Settings.create().strength(2f).sounds(BlockSoundGroup.METAL).noCollision()));
+
+    public static final Block OSMIUM_FENCE = registerBlock("osmium_fence",
+            new FenceBlock(AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.METAL)));
+    public static final Block OSMIUM_FENCE_GATE = registerBlock("osmium_fence_gate",
+            new FenceGateBlock(WoodType.ACACIA,AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.METAL)));
+    public static final Block OSMIUM_WALL = registerBlock("osmium_wall",
+            new WallBlock(AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.METAL)));
+
+    public static final Block OSMIUM_DOOR = registerBlock("osmium_door",
+            new DoorBlock(BlockSetType.IRON,
+                    AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.METAL).nonOpaque()));
+    public static final Block OSMIUM_TRAPDOOR = registerBlock("osmium_trapdoor",
+            new TrapdoorBlock(BlockSetType.IRON,
+                    AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.METAL).nonOpaque()));
+
 
 
 

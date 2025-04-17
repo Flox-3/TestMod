@@ -19,6 +19,17 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.RAW_OSMIUM_BLOCK);
         addDrop(ModBlocks.MAGIC_BLOCK);
 
+
+        addDrop(ModBlocks.OSMIUM_SLAB, slabDrops(ModBlocks.OSMIUM_SLAB));
+        addDrop(ModBlocks.OSMIUM_STAIRS);
+        addDrop(ModBlocks.OSMIUM_FENCE);
+        addDrop(ModBlocks.OSMIUM_FENCE_GATE);
+        addDrop(ModBlocks.OSMIUM_WALL);
+        addDrop(ModBlocks.OSMIUM_DOOR, doorDrops(ModBlocks.OSMIUM_DOOR));
+        addDrop(ModBlocks.OSMIUM_TRAPDOOR);
+        addDrop(ModBlocks.OSMIUM_BUTTON);
+        addDrop(ModBlocks.OSMIUM_PRESSURE_PLATE);
+
         addDrop(ModBlocks.OSMIUM_ORE, oreDrops(ModBlocks.OSMIUM_ORE, ModItems.RAW_OSMIUM));
         addDrop(ModBlocks.DEEPSLATE_OSMIUM_ORE, oreDrops(ModBlocks.DEEPSLATE_OSMIUM_ORE, ModItems.RAW_OSMIUM));
 
