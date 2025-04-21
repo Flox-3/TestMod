@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "testmod:block/osmium_slab"
+    },
+    "type=double": {
+      "model": "testmod:block/osmium_block"
+    },
+    "type=top": {
+      "model": "testmod:block/osmium_slab_top"
+    }
+  }
+}

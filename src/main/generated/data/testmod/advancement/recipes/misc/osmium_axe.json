@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_osmium_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "testmod:osmium_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "testmod:osmium_axe"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_osmium_ingot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "testmod:osmium_axe"
+    ]
+  }
+}

@@ -4,6 +4,7 @@ package faggot.testmod.block;
 import faggot.testmod.TestMod;
 import faggot.testmod.block.custom.MagicBlock;
 import faggot.testmod.block.custom.OsmiumLoadingBar;
+import faggot.testmod.block.custom.PedestalBlock;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
@@ -40,6 +41,9 @@ public class ModBlocks {
     public static final Block OSMIUM_LOADING_BAR = registerBlock("osmium_loading_bar",
             new OsmiumLoadingBar(AbstractBlock.Settings.create().strength(3f).requiresTool()
                     .luminance(state -> state.get(OsmiumLoadingBar.CLICKED)? 15 : 0)));
+
+    public static final Block PEDESTAL = registerBlock("pedestal",
+            new PedestalBlock(AbstractBlock.Settings.create().strength(3f)));
 
     //Non-Block Blocks
     public static final Block OSMIUM_STAIRS = registerBlock("osmium_stairs",

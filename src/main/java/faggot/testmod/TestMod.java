@@ -1,9 +1,11 @@
 package faggot.testmod;
 
 import faggot.testmod.block.ModBlocks;
+import faggot.testmod.block.entity.ModBlockEntities;
 import faggot.testmod.component.ModDataComponentTypes;
 import faggot.testmod.item.ModItemGroups;
 import faggot.testmod.item.ModItems;
+import faggot.testmod.screen.ModScreenHandlers;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -33,6 +35,9 @@ public class TestMod implements ModInitializer {
 
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
+
+		ModBlockEntities.registerBlockEntities();
+		ModScreenHandlers.registerScreenHandlers();
 
 		ModDataComponentTypes.registerDataComponentTypes();
 

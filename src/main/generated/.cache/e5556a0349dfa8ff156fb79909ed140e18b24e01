@@ -1,0 +1,15 @@
+// 1.21	2025-04-17T17:44:48.2982606	Test Mod/Block Loot Tables
+b3dd365c8b9772a469195d8e3f26798168d06598 data\testmod\loot_table\blocks\deepslate_osmium_ore.json
+45211c5823d31f1b8ee36ebcd8bfb02a9a49bcb9 data\testmod\loot_table\blocks\osmium_stairs.json
+2cbc3f4fdc98a7c80a4b87831a899a44f02b4ea1 data\testmod\loot_table\blocks\osmium_slab.json
+ff7590126ede9ddfc81ec8871a83730bf815a1d8 data\testmod\loot_table\blocks\magic_block.json
+c99ede2697dc033b4f2fc2fde3e7b91043b442cf data\testmod\loot_table\blocks\osmium_block.json
+9c9e24e43abffe449f544ee5eab898f28ff1679a data\testmod\loot_table\blocks\raw_osmium_block.json
+18692595032612aa110eddfe3483093ce7b3bb64 data\testmod\loot_table\blocks\osmium_trapdoor.json
+f7b846ab5ee3545749020878a2c444bb267d6901 data\testmod\loot_table\blocks\osmium_wall.json
+cf18c23559e2f871cd583ff02b746194c7449a26 data\testmod\loot_table\blocks\osmium_fence_gate.json
+f7228fc02800152df7a10465792ed46506ac3c71 data\testmod\loot_table\blocks\osmium_fence.json
+4f94012698fe3ffe034c790f4334be399b95dcb3 data\testmod\loot_table\blocks\osmium_door.json
+15e7ae58842989703a43d33d81f1bc4535e96adc data\testmod\loot_table\blocks\osmium_button.json
+7b15bc7830e6d9cf14d29ba5b23afa67afc9fe40 data\testmod\loot_table\blocks\osmium_pressure_plate.json
+2ac37403b0ee9bb247b27943fc1b9016e933659f data\testmod\loot_table\blocks\osmium_ore.json

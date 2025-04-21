@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "clicked=false": {
+      "model": "testmod:block/osmium_loading_bar"
+    },
+    "clicked=true": {
+      "model": "testmod:block/osmium_loading_bar_2"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_left_open",
+  "textures": {
+    "bottom": "testmod:block/osmium_door_bottom",
+    "top": "testmod:block/osmium_door_top"
+  }
+}
