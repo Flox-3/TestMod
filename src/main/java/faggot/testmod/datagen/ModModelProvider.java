@@ -37,6 +37,8 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(ModBlocks.OSMIUM_LOADING_BAR)
                 .coordinate(BlockStateModelGenerator.createBooleanModelMap(OsmiumLoadingBar.CLICKED, OsmiumLoadingBar2, OsmiumLoadingBar1)));
 
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.GROWTH_CHAMBER);
+
     }
 
     @Override
@@ -44,7 +46,6 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.RAW_OSMIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.OSMIUM_INGOT, Models.GENERATED);
         itemModelGenerator.register(ModItems.CRACK, Models.GENERATED);
-        //itemModelGenerator.register(ModItems.CHISEL, Models.GENERATED);
 
 
         itemModelGenerator.register(ModItems.OSMIUM_SWORD, Models.HANDHELD);

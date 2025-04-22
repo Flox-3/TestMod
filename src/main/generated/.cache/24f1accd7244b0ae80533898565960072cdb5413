@@ -1,4 +1,4 @@
-// 1.21	2025-04-17T17:44:48.2942565	Test Mod/Model Definitions
+// 1.21	2025-04-22T17:32:27.6223084	Test Mod/Model Definitions
 b3ea3577dc091717d7441592dfd96252f8bd7e18 assets\testmod\models\block\osmium_fence_side.json
 7937e504b386e8b35971c47a080db9c654d94a0e assets\testmod\models\block\osmium_wall_post.json
 a342ab122422597ab3fe9ed50190c99806136817 assets\testmod\models\item\osmium_axe.json
@@ -17,8 +17,8 @@ ac367c5509644cd1eb0768603c4d7ea8287e750b assets\testmod\models\block\osmium_door
 9d48db1f1f262056c33c50a66d560cbd51962d3d assets\testmod\models\block\osmium_loading_bar.json
 00c5f32369f5fb53f6bd8d745dff74aa9a94e444 assets\testmod\models\item\osmium_pressure_plate.json
 ac96ad9d76d9e4d202f8077f855de54ebe98bd4a assets\testmod\models\item\osmium_sword.json
-c75c3ef16d0240496cc6a3105f7cee35b3861a6e assets\testmod\models\block\osmium_block.json
 b94343afc808e31e505f967d3137fd681b9fec2c assets\testmod\models\block\osmium_door_bottom_left.json
+c75c3ef16d0240496cc6a3105f7cee35b3861a6e assets\testmod\models\block\osmium_block.json
 c208ec43fa86882c5cf0cfffbc412e1c66dc6eba assets\testmod\models\item\magic_block.json
 dc20b6ad030e34d4bfab375b43d322c3dff3b7ee assets\testmod\models\block\osmium_door_top_left.json
 95a5c3d36050ac0d0ebedd7d45648161ea1daa05 assets\testmod\models\item\osmium_pickaxe.json
@@ -35,6 +35,8 @@ e926327fcc10d4b6538f268e2b953e5b6a0ead87 assets\testmod\models\item\osmium_stair
 7ab6b37819a405bf89e6c946c30f403cb40a09c7 assets\testmod\models\block\osmium_loading_bar_2.json
 6f422dff4145aa27b5e824e40ea2922b6802b45d assets\testmod\models\block\osmium_trapdoor_bottom.json
 9a06e54e22cd98054d399605ca2038951a99fa94 assets\testmod\models\block\magic_block.json
+b917ef08a42e95bda9f2229730149dda072ea57b assets\testmod\models\block\growth_chamber.json
+a5fbfa43ac1c82f9de15fe163cc427172c2a5f8b assets\testmod\blockstates\growth_chamber.json
 7ee5ae08d8fa4f8c54c5b4cf0613c4ff2c725c66 assets\testmod\blockstates\osmium_button.json
 814982994a4bb1b5665b19f06dc9c347f5e4cbb8 assets\testmod\models\block\osmium_fence_post.json
 5aa144df9c58c8b3e99d64899bb720deecd7cc42 assets\testmod\models\block\osmium_wall_side.json
@@ -64,6 +66,7 @@ eb20a160bfa701c9a451dfbcaef2533dc9e0be29 assets\testmod\models\item\osmium_ore.j
 8cca661eac99896aa79222b331ce6231fb461db0 assets\testmod\models\block\osmium_fence_gate_wall_open.json
 804e2623c1b290108174780810e558a7ac337cff assets\testmod\blockstates\osmium_ore.json
 77f913a567d9f68a5f1d5d849dd863131442c6a1 assets\testmod\models\item\raw_osmium.json
+1ca27dbdcce70563b238932d1bed538f25d5e64a assets\testmod\models\item\growth_chamber.json
 00ae1fda085c66ba2aa34dfd6fdad62511682b3b assets\testmod\models\block\osmium_trapdoor_open.json
 c70527ab0c7d123ea8fa982df31ff41a242996da assets\testmod\models\item\osmium_shovel.json
 345e691035b6bd61605e1d0b637dd1db101b1ef3 assets\testmod\blockstates\osmium_pressure_plate.json

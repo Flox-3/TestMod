@@ -19,7 +19,7 @@
   "block.testmod.osmium_trapdoor": "Osmium Trapdoor",
   "block.testmod.osmium_button": "Osmium Button",
   "block.testmod.osmium_pressure_plate": "Osmium Pressure Plate",
-  "osmium_loading_bar": "Osmium Loading Bar",
+  "block.testmod.osmium_loading_bar": "Osmium Loading Bar",
 
 
   "osmium_sword": "Osmium Sword",
@@ -30,7 +30,8 @@
 
   "staff": "Staff",
 
-  "pedestal": "Pedestal",
+  "block.testmod.pedestal": "Pedestal",
+  "block.testmod.growth_chamber": "Growth Chamber",
 
 
 

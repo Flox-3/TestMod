@@ -4,6 +4,7 @@ import faggot.testmod.block.ModBlocks;
 import faggot.testmod.block.entity.ModBlockEntities;
 import faggot.testmod.block.entity.renderer.PedestalBlockEntityRenderer;
 import faggot.testmod.screen.ModScreenHandlers;
+import faggot.testmod.screen.custom.GrowthChamberScreen;
 import faggot.testmod.screen.custom.PedestalScreen;
 import faggot.testmod.util.ModModelPredicates;
 import net.fabricmc.api.ClientModInitializer;
@@ -23,5 +24,7 @@ public class TestModClient implements ClientModInitializer {
 
         BlockEntityRendererFactories.register(ModBlockEntities.PEDESTAL_BE, PedestalBlockEntityRenderer::new);
         HandledScreens.register(ModScreenHandlers.PEDESTAL_SCREEN_HANDLER, PedestalScreen::new);
+
+        HandledScreens.register(ModScreenHandlers.GROWTH_CHAMBER_SCREEN_HANDLER, GrowthChamberScreen::new);
     }
 }

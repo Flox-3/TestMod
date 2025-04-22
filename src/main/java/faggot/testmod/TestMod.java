@@ -5,6 +5,7 @@ import faggot.testmod.block.entity.ModBlockEntities;
 import faggot.testmod.component.ModDataComponentTypes;
 import faggot.testmod.item.ModItemGroups;
 import faggot.testmod.item.ModItems;
+import faggot.testmod.recipe.ModRecipes;
 import faggot.testmod.screen.ModScreenHandlers;
 import net.fabricmc.api.ModInitializer;
 
@@ -38,6 +39,8 @@ public class TestMod implements ModInitializer {
 
 		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();
+
+		ModRecipes.registerRecipes();
 
 		ModDataComponentTypes.registerDataComponentTypes();
 

@@ -35,6 +35,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.OSMIUM_LOADING_BAR);
 
                         entries.add(ModBlocks.PEDESTAL);
+                        entries.add(ModBlocks.GROWTH_CHAMBER);
 
                         entries.add(ModItems.OSMIUM_SWORD);
                         entries.add(ModItems.OSMIUM_SHOVEL);

@@ -1,0 +1,10 @@
+{
+  "type": "testmod:growth_chamber",
+  "ingredient": {
+    "item": "testmod:osmium_ingot"
+  },
+  "result": {
+    "count": 16,
+    "id": "testmod:osmium_block"
+  }
+}
