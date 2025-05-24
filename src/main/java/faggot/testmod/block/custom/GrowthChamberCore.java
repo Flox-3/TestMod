@@ -69,6 +69,12 @@ public class GrowthChamberCore extends BlockWithEntity implements BlockEntityPro
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }
+        if (!world.isClient) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof GrowthChamberCasingEntity casing) {
+                casing.forceNeighborsToCheckCoreOnBroken();
+            }
+        }
     }
 
     @Override

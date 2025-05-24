@@ -7,7 +7,12 @@ import faggot.testmod.util.ModTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +27,18 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
         return null;
     }
 
+
+    @Override
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
+                                             PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof GrowthChamberCasingEntity casing) {
+                casing.checkForCoreBlocks();
+            }
+        }
+        return ItemActionResult.SUCCESS;
+    }
 
 
     @Override
@@ -50,14 +67,12 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
                     BlockEntity coreEntity = world.getBlockEntity(corePos);
                     if (coreEntity instanceof GrowthChamberCoreEntity core) {
                         core.decrementConnectedCasings();
-                    } else {
-                        if (!world.isClient) {
-                            BlockEntity be = world.getBlockEntity(pos);
-                            if (be instanceof GrowthChamberCasingEntity) {
-                                casing.forceNeighborsToCheckCoreOnBroken();
-                            }
+                    }
+                    if (!world.isClient) {
+                        BlockEntity be = world.getBlockEntity(pos);
+                        if (be instanceof GrowthChamberCasingEntity) {
+                            casing.checkForCoreBlocks();
                         }
-
                     }
                 }
             }

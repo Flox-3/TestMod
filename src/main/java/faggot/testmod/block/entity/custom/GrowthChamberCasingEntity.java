@@ -32,6 +32,18 @@ public class GrowthChamberCasingEntity extends BlockEntity {
 
 
     public void checkForCoreBlocks() {
+
+        if (savedCorePos != null) {
+            BlockEntity coreEntity = world.getBlockEntity(savedCorePos);
+            if (coreEntity instanceof GrowthChamberCoreEntity core) {
+                    core.decrementConnectedCasings();
+            }
+            savedCorePos = null;
+            coreCount = 0;
+            markDirty();
+        }
+
+
         // Step 1: Directly check for core
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
@@ -100,9 +112,7 @@ public class GrowthChamberCasingEntity extends BlockEntity {
             BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
 
             if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
-                if (neighborCasing.getCoreCount() == 1) {
                     neighborCasing.checkForCoreBlocks();
-                }
             }
         }
     }
@@ -121,7 +131,7 @@ public class GrowthChamberCasingEntity extends BlockEntity {
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.writeNbt(nbt, registryLookup);
 
-        if (savedCorePos != null) {
+        if  (savedCorePos != null) {
             nbt.putInt("core_x", savedCorePos.getX());
             nbt.putInt("core_y", savedCorePos.getY());
             nbt.putInt("core_z", savedCorePos.getZ());
