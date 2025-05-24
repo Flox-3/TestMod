@@ -1,4 +1,4 @@
-// 1.21	2025-05-24T14:06:56.4618788	Test Mod/Recipes
+// 1.21	2025-05-24T14:55:44.1375878	Test Mod/Recipes
 2a8b949a7e5e94152e065af541354e10c41aad80 data\testmod\recipe\raw_osmium_block.json
 5bfa9d2ceb3982a6c168e031647733c5f0a48f60 data\testmod\advancement\recipes\misc\osmium_ingot_from_smelting_deepslate_osmium_ore.json
 7b5401430265dfb6bc3665780b93b0c6cf1ffe56 data\testmod\advancement\recipes\misc\osmium_sword.json
@@ -22,9 +22,9 @@ d75f59e10fbbe52a703fb1e1b801c1e077e4dc9e data\testmod\advancement\recipes\misc\o
 d0bbd1de061f7134263c536a7781a69f1993b82d data\testmod\recipe\osmium_axe.json
 ff0478df31b747fcd0d60a3664bff6b8eb6afdf6 data\testmod\recipe\osmium_hoe.json
 e80dff892a4127510b732a172e681df6489ba1a7 data\testmod\advancement\recipes\misc\osmium_ingot_from_smelting_raw_osmium.json
+0d7ba7a2a69406a3ffd572ac4c63cde3b6da5249 data\testmod\advancement\recipes\misc\osmium_ingot_from_blasting_osmium_ore.json
 c2a0c936b0383b5fa841f22bfac7d68be10becda data\testmod\advancement\recipes\misc\osmium_ingot_from_blasting_raw_osmium.json
 a9c0c9f99bdd588c322b47e5cab693a74f5652ed data\testmod\recipe\osmium_ingot_from_smelting_osmium_ore.json
-0d7ba7a2a69406a3ffd572ac4c63cde3b6da5249 data\testmod\advancement\recipes\misc\osmium_ingot_from_blasting_osmium_ore.json
 8d28d3b9742df7c25d9701c47474425fbfcd1ef1 data\testmod\recipe\raw_osmium.json
 564953c03c0fc6d14191845693ccf2058f7ba93e data\testmod\advancement\recipes\misc\raw_osmium_from_magic_block.json
 2a052be41bdeff1d474a86f91e648bebb7e0d480 data\testmod\recipe\raw_osmium_from_magic_block.json
