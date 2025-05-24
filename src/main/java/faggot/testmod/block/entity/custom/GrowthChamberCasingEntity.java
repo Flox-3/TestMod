@@ -11,16 +11,25 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-
+import org.jetbrains.annotations.Nullable;
 
 public class GrowthChamberCasingEntity extends BlockEntity {
     public GrowthChamberCasingEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GROWTH_CHAMBER_CASING_BE, pos, state);
     }
 
-
     private BlockPos savedCorePos = null;
     private int coreCount = 0;
+    private boolean linkedIndirectly = false;
+    private BlockPos linkedViaCasing = null;
+
+    public boolean isLinkedIndirectly() {
+        return linkedIndirectly;
+    }
+
+    public BlockPos getLinkedViaCasing() {
+        return linkedViaCasing;
+    }
 
     public int getCoreCount() {
         return coreCount;
@@ -30,27 +39,26 @@ public class GrowthChamberCasingEntity extends BlockEntity {
         return savedCorePos;
     }
 
-
     public void checkForCoreBlocks() {
-
         if (savedCorePos != null) {
             BlockEntity coreEntity = world.getBlockEntity(savedCorePos);
             if (coreEntity instanceof GrowthChamberCoreEntity core) {
-                    core.decrementConnectedCasings();
+                core.decrementConnectedCasings();
             }
             savedCorePos = null;
             coreCount = 0;
+            linkedIndirectly = false;
+            linkedViaCasing = null;
             markDirty();
         }
 
-
-        // Step 1: Directly check for core
+        // Step 1: Directly check for core via tag
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockState neighborState = world.getBlockState(neighborPos);
 
             if (neighborState.isIn(ModTags.Blocks.CORE)) {
-                linkToCore(neighborPos, "directly to core");
+                linkToCore(neighborPos, "directly to core", false, null);
                 forceNeighborsToCheckCore();
                 return;
             }
@@ -59,10 +67,13 @@ public class GrowthChamberCasingEntity extends BlockEntity {
         // Step 2: No direct core — check neighbor casings
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
-            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+            BlockState neighborState = world.getBlockState(neighborPos);
 
-            if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
-                if (tryLinkToNeighborCasing(neighborCasing, neighborPos)) return;
+            if (neighborState.isIn(ModTags.Blocks.CASING)) {
+                BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+                if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
+                    if (tryLinkToNeighborCasing(neighborCasing, neighborPos)) return;
+                }
             }
         }
 
@@ -72,9 +83,11 @@ public class GrowthChamberCasingEntity extends BlockEntity {
         sendMessage("Casing at " + pos + " is not connected to any core.");
     }
 
-    private void linkToCore(BlockPos corePos, String messageSource) {
+    private void linkToCore(BlockPos corePos, String messageSource, boolean indirectly, @Nullable BlockPos viaCasing) {
         savedCorePos = corePos;
         coreCount = 1;
+        linkedIndirectly = indirectly;
+        linkedViaCasing = viaCasing;
 
         BlockEntity be = world.getBlockEntity(corePos);
         if (be instanceof GrowthChamberCoreEntity coreEntity) {
@@ -86,7 +99,13 @@ public class GrowthChamberCasingEntity extends BlockEntity {
 
     private boolean tryLinkToNeighborCasing(GrowthChamberCasingEntity neighborCasing, BlockPos neighborPos) {
         if (neighborCasing.getCoreCount() == 1) {
-            linkToCore(neighborCasing.getSavedCorePos(), "via neighbor casing at " + neighborPos);
+            // Prevent circular references
+            if (neighborCasing.isLinkedIndirectly() && neighborCasing.getLinkedViaCasing().equals(this.pos)) {
+                forceNeighborsToCheckCoreOnBroken();
+                return false;
+            }
+
+            linkToCore(neighborCasing.getSavedCorePos(), "via neighbor casing at " + neighborPos, true, neighborPos);
             forceNeighborsToCheckCore();
             return true;
         }
@@ -96,11 +115,13 @@ public class GrowthChamberCasingEntity extends BlockEntity {
     public void forceNeighborsToCheckCore() {
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
-            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
-
-            if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
-                if (neighborCasing.getCoreCount() == 0) {
-                    neighborCasing.checkForCoreBlocks();
+            BlockState neighborState = world.getBlockState(neighborPos);
+            if (neighborState.isIn(ModTags.Blocks.CASING)) {
+                BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+                if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
+                    if (neighborCasing.getCoreCount() == 0) {
+                        neighborCasing.checkForCoreBlocks();
+                    }
                 }
             }
         }
@@ -109,14 +130,15 @@ public class GrowthChamberCasingEntity extends BlockEntity {
     public void forceNeighborsToCheckCoreOnBroken() {
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
-            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
-
-            if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
+            BlockState neighborState = world.getBlockState(neighborPos);
+            if (neighborState.isIn(ModTags.Blocks.CASING)) {
+                BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+                if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
                     neighborCasing.checkForCoreBlocks();
+                }
             }
         }
     }
-
 
     private void sendMessage(String msg) {
         if (!world.isClient && world instanceof ServerWorld serverWorld) {
@@ -126,16 +148,22 @@ public class GrowthChamberCasingEntity extends BlockEntity {
         }
     }
 
-
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.writeNbt(nbt, registryLookup);
 
-        if  (savedCorePos != null) {
+        if (savedCorePos != null) {
             nbt.putInt("core_x", savedCorePos.getX());
             nbt.putInt("core_y", savedCorePos.getY());
             nbt.putInt("core_z", savedCorePos.getZ());
         }
+        if (linkedIndirectly && linkedViaCasing != null) {
+            nbt.putBoolean("linked_indirectly", true);
+            nbt.putInt("linked_x", linkedViaCasing.getX());
+            nbt.putInt("linked_y", linkedViaCasing.getY());
+            nbt.putInt("linked_z", linkedViaCasing.getZ());
+        }
+
         nbt.putInt("core_count", coreCount);
     }
 
@@ -153,13 +181,17 @@ public class GrowthChamberCasingEntity extends BlockEntity {
             savedCorePos = null;
         }
 
+        linkedIndirectly = nbt.getBoolean("linked_indirectly");
+        if (linkedIndirectly) {
+            linkedViaCasing = new BlockPos(
+                    nbt.getInt("linked_x"),
+                    nbt.getInt("linked_y"),
+                    nbt.getInt("linked_z")
+            );
+        } else {
+            linkedViaCasing = null;
+        }
+
         coreCount = nbt.getInt("core_count");
     }
-
-
-
-
 }
-
-
-

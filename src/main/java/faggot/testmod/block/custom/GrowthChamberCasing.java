@@ -9,13 +9,13 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
 
 public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityProvider {
     public GrowthChamberCasing(Settings settings) {
@@ -68,11 +68,11 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
                     if (coreEntity instanceof GrowthChamberCoreEntity core) {
                         core.decrementConnectedCasings();
                     }
-                    if (!world.isClient) {
-                        BlockEntity be = world.getBlockEntity(pos);
-                        if (be instanceof GrowthChamberCasingEntity) {
-                            casing.checkForCoreBlocks();
-                        }
+                }
+                if (!world.isClient) {
+                    BlockEntity be = world.getBlockEntity(pos);
+                    if (be instanceof GrowthChamberCasingEntity) {
+                        casing.forceNeighborsToCheckCoreOnBroken();
                     }
                 }
             }
@@ -81,6 +81,21 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
         }
     }
 
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos,
+                               Block block, BlockPos fromPos, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+
+        if (!world.isClient) {
+            // Check if the updating block is in the core or casing tags
+            if (block.getDefaultState().isIn(ModTags.Blocks.CORE) || block.getDefaultState().isIn(ModTags.Blocks.CASING)) {
+                BlockEntity be = world.getBlockEntity(pos);
+                if (be instanceof GrowthChamberCasingEntity casing) {
+                    casing.checkForCoreBlocks();
+                }
+            }
+        }
+    }
 
 
 
