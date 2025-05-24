@@ -2,21 +2,17 @@ package faggot.testmod.block.custom;
 
 import com.mojang.serialization.MapCodec;
 import faggot.testmod.block.entity.custom.GrowthChamberCasingEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
+import faggot.testmod.block.entity.custom.GrowthChamberCoreEntity;
+import faggot.testmod.util.ModTags;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class GrowthChamberCasing extends BlockWithEntity {
+public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityProvider {
     public GrowthChamberCasing(Settings settings) {
         super(settings);
     }
@@ -24,14 +20,6 @@ public class GrowthChamberCasing extends BlockWithEntity {
     @Override
     protected MapCodec<? extends BlockWithEntity> getCodec() {
         return null;
-    }
-
-    public ActionResult onUse(BlockState state, World world, BlockPos pos,
-                              PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            player.sendMessage(Text.literal("This is a casing block."), false);
-        }
-        return ActionResult.SUCCESS;
     }
 
 
@@ -45,13 +33,51 @@ public class GrowthChamberCasing extends BlockWithEntity {
             BlockEntity be = world.getBlockEntity(pos);
             if (be instanceof GrowthChamberCasingEntity casing) {
                 casing.checkForCoreBlocks();
+                casing.forceNeighborsToCheckCore();
             }
         }
     }
 
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.isOf(newState.getBlock())) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+
+            if (blockEntity instanceof GrowthChamberCasingEntity casing) {
+                BlockPos corePos = casing.getSavedCorePos();
+
+                if (corePos != null) {
+                    BlockEntity coreEntity = world.getBlockEntity(corePos);
+                    if (coreEntity instanceof GrowthChamberCoreEntity core) {
+                        core.decrementConnectedCasings();
+                    } else {
+                        if (!world.isClient) {
+                            BlockEntity be = world.getBlockEntity(pos);
+                            if (be instanceof GrowthChamberCasingEntity) {
+                                casing.forceNeighborsToCheckCoreOnBroken();
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
+    }
+
+
+
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return null;
+        return new GrowthChamberCasingEntity(pos, state);
     }
+
+    @Override
+    protected BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+
 }

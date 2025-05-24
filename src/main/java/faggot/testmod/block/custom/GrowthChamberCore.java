@@ -2,11 +2,13 @@ package faggot.testmod.block.custom;
 
 import com.mojang.serialization.MapCodec;
 import faggot.testmod.block.entity.ModBlockEntities;
+import faggot.testmod.block.entity.custom.GrowthChamberCasingEntity;
 import faggot.testmod.block.entity.custom.GrowthChamberCoreEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -25,7 +27,23 @@ public class GrowthChamberCore extends BlockWithEntity implements BlockEntityPro
         super(settings);
     }
 
+    //Multiblock scheiße
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state,
+                         LivingEntity placer, ItemStack itemStack) {
+        super.onPlaced(world, pos, state, placer, itemStack);
 
+        if (!world.isClient) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof GrowthChamberCoreEntity core) {
+                core.forceNeighborsToCheckForCore();
+            }
+        }
+    }
+
+
+
+    //rest oder so ka
     @Override
     protected MapCodec<? extends BlockWithEntity> getCodec() {
         return CODEC;

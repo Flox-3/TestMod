@@ -25,6 +25,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +56,16 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         return connectedCasings;
     }
 
+    public void forceNeighborsToCheckForCore() {
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = pos.offset(direction);
+            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+
+            if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
+                neighborCasing.checkForCoreBlocks();
+            }
+        }
+    }
 
 
 
@@ -122,6 +133,8 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         Inventories.writeNbt(nbt, inventory, registryLookup);
         nbt.putInt("growth_chamber.progress", progress);
         nbt.putInt("growth_chamber.max_progress", maxProgress);
+
+        nbt.putInt("growth_chamber.connected_casings", connectedCasings);
     }
 
     @Override
@@ -129,6 +142,9 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         Inventories.readNbt(nbt, inventory, registryLookup);
         progress = nbt.getInt("growth_chamber.progress");
         maxProgress = nbt.getInt("growth_chamber.max_progress");
+
+        connectedCasings = nbt.getInt("growth_chamber.connected_casings");
+
         super.readNbt(nbt, registryLookup);
     }
 

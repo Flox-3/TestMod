@@ -1,4 +1,4 @@
-// 1.21	2025-05-24T14:55:44.136588	Test Mod/Model Definitions
+// 1.21	2025-05-24T16:01:37.1514975	Test Mod/Model Definitions
 b3ea3577dc091717d7441592dfd96252f8bd7e18 assets\testmod\models\block\osmium_fence_side.json
 7937e504b386e8b35971c47a080db9c654d94a0e assets\testmod\models\block\osmium_wall_post.json
 a342ab122422597ab3fe9ed50190c99806136817 assets\testmod\models\item\osmium_axe.json
@@ -14,8 +14,8 @@ ee7665b7e3df0b1fa306214a3bb58a19fdd7a0b9 assets\testmod\models\block\osmium_fenc
 ac367c5509644cd1eb0768603c4d7ea8287e750b assets\testmod\models\block\osmium_door_top_right.json
 95ebd21adaacadf09a98c86c7be4db871a7c5d58 assets\testmod\models\item\osmium_block.json
 5c67f7ca8e0e20808acfb3c3fb5ab9e0edb54f62 assets\testmod\models\item\osmium_trapdoor.json
-9d48db1f1f262056c33c50a66d560cbd51962d3d assets\testmod\models\block\osmium_loading_bar.json
 00c5f32369f5fb53f6bd8d745dff74aa9a94e444 assets\testmod\models\item\osmium_pressure_plate.json
+9d48db1f1f262056c33c50a66d560cbd51962d3d assets\testmod\models\block\osmium_loading_bar.json
 ac96ad9d76d9e4d202f8077f855de54ebe98bd4a assets\testmod\models\item\osmium_sword.json
 b94343afc808e31e505f967d3137fd681b9fec2c assets\testmod\models\block\osmium_door_bottom_left.json
 c75c3ef16d0240496cc6a3105f7cee35b3861a6e assets\testmod\models\block\osmium_block.json
@@ -32,9 +32,9 @@ b7f2d9b9dd1b812d8fad20d596a29f541d562e68 assets\testmod\models\item\osmium_slab.
 54b5ef175fa3115e8d9c1a81ef5ef67339d20f98 assets\testmod\models\item\osmium_fence_gate.json
 b8755c98cab2b6317e09673a46fe93abf4c0805a assets\testmod\blockstates\osmium_fence_gate.json
 e74be35792306d17fb5b318ddd98e0a1affe5e47 assets\testmod\blockstates\magic_block.json
-7ab6b37819a405bf89e6c946c30f403cb40a09c7 assets\testmod\models\block\osmium_loading_bar_2.json
-e926327fcc10d4b6538f268e2b953e5b6a0ead87 assets\testmod\models\item\osmium_stairs.json
 657ae0cfc5804b5011683beafacc84b84c19c7b9 assets\testmod\blockstates\osmium_wall.json
+e926327fcc10d4b6538f268e2b953e5b6a0ead87 assets\testmod\models\item\osmium_stairs.json
+7ab6b37819a405bf89e6c946c30f403cb40a09c7 assets\testmod\models\block\osmium_loading_bar_2.json
 6f422dff4145aa27b5e824e40ea2922b6802b45d assets\testmod\models\block\osmium_trapdoor_bottom.json
 9a06e54e22cd98054d399605ca2038951a99fa94 assets\testmod\models\block\magic_block.json
 7ee5ae08d8fa4f8c54c5b4cf0613c4ff2c725c66 assets\testmod\blockstates\osmium_button.json
