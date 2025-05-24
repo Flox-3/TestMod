@@ -1,6 +1,6 @@
 package faggot.testmod.screen.custom;
 
-import faggot.testmod.block.entity.custom.GrowthChamberBlockEntity;
+import faggot.testmod.block.entity.custom.GrowthChamberCoreEntity;
 import faggot.testmod.screen.ModScreenHandlers;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 public class GrowthChamberScreenHandler extends ScreenHandler {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
-    public final GrowthChamberBlockEntity blockEntity;
+    public final GrowthChamberCoreEntity blockEntity;
 
     public GrowthChamberScreenHandler(int syncId, PlayerInventory inventory, BlockPos pos) {
         this(syncId, inventory, inventory.player.getWorld().getBlockEntity(pos), new ArrayPropertyDelegate(2));
@@ -26,7 +26,7 @@ public class GrowthChamberScreenHandler extends ScreenHandler {
                                       BlockEntity blockEntity, PropertyDelegate arrayPropertyDelegate) {
         super(ModScreenHandlers.GROWTH_CHAMBER_SCREEN_HANDLER, syncId);
         this.inventory = ((Inventory) blockEntity);
-        this.blockEntity = ((GrowthChamberBlockEntity) blockEntity);
+        this.blockEntity = ((GrowthChamberCoreEntity) blockEntity);
         this.propertyDelegate = arrayPropertyDelegate;
 
         this.addSlot(new Slot(inventory, 0, 54, 34));

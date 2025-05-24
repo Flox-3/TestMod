@@ -2,11 +2,8 @@ package faggot.testmod.block.custom;
 
 import com.mojang.serialization.MapCodec;
 import faggot.testmod.block.entity.ModBlockEntities;
-import faggot.testmod.block.entity.custom.GrowthChamberBlockEntity;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
+import faggot.testmod.block.entity.custom.GrowthChamberCoreEntity;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -21,12 +18,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class GrowthChamberBlock extends BlockWithEntity implements BlockEntityProvider {
-    public static final MapCodec<GrowthChamberBlock> CODEC = GrowthChamberBlock.createCodec(GrowthChamberBlock::new);
+public class GrowthChamberCore extends BlockWithEntity implements BlockEntityProvider {
+    public static final MapCodec<GrowthChamberCore> CODEC = GrowthChamberCore.createCodec(GrowthChamberCore::new);
 
-    public GrowthChamberBlock(Settings settings) {
+    public GrowthChamberCore(Settings settings) {
         super(settings);
     }
+
 
     @Override
     protected MapCodec<? extends BlockWithEntity> getCodec() {
@@ -35,7 +33,7 @@ public class GrowthChamberBlock extends BlockWithEntity implements BlockEntityPr
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GrowthChamberBlockEntity(pos, state);
+        return new GrowthChamberCoreEntity(pos, state);
     }
 
     @Override
@@ -47,8 +45,8 @@ public class GrowthChamberBlock extends BlockWithEntity implements BlockEntityPr
     protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if(state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if(blockEntity instanceof GrowthChamberBlockEntity) {
-                ItemScatterer.spawn(world, pos, ((GrowthChamberBlockEntity) blockEntity));
+            if(blockEntity instanceof GrowthChamberCoreEntity) {
+                ItemScatterer.spawn(world, pos, ((GrowthChamberCoreEntity) blockEntity));
                 world.updateComparators(pos, this);
             }
             super.onStateReplaced(state, world, pos, newState, moved);
@@ -59,7 +57,7 @@ public class GrowthChamberBlock extends BlockWithEntity implements BlockEntityPr
     protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
                                              PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            NamedScreenHandlerFactory screenHandlerFactory = ((GrowthChamberBlockEntity) world.getBlockEntity(pos));
+            NamedScreenHandlerFactory screenHandlerFactory = ((GrowthChamberCoreEntity) world.getBlockEntity(pos));
             if (screenHandlerFactory != null) {
                 player.openHandledScreen(screenHandlerFactory);
             }
@@ -74,7 +72,7 @@ public class GrowthChamberBlock extends BlockWithEntity implements BlockEntityPr
             return null;
         }
 
-        return validateTicker(type, ModBlockEntities.GROWTH_CHAMBER_BE,
+        return validateTicker(type, ModBlockEntities.GROWTH_CHAMBER_CORE_BE,
                 (world1, pos, state1, blockEntity) -> blockEntity.tick(world1, pos, state1));
     }
 }

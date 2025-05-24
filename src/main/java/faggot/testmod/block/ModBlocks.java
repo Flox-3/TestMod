@@ -2,7 +2,7 @@ package faggot.testmod.block;
 
 
 import faggot.testmod.TestMod;
-import faggot.testmod.block.custom.GrowthChamberBlock;
+import faggot.testmod.block.custom.GrowthChamberCore;
 import faggot.testmod.block.custom.MagicBlock;
 import faggot.testmod.block.custom.OsmiumLoadingBar;
 import faggot.testmod.block.custom.PedestalBlock;
@@ -46,8 +46,12 @@ public class ModBlocks {
     public static final Block PEDESTAL = registerBlock("pedestal",
             new PedestalBlock(AbstractBlock.Settings.create().strength(3f).nonOpaque()));
 
-    public static final Block GROWTH_CHAMBER = registerBlock("growth_chamber",
-            new GrowthChamberBlock(AbstractBlock.Settings.create().strength(3f)));
+
+    //Multiblock
+    public static final Block GROWTH_CHAMBER_CORE = registerBlock("growth_chamber_core",
+            new GrowthChamberCore(AbstractBlock.Settings.create().strength(3f)));
+    public static final Block GROWTH_CHAMBER_CASING = registerBlock("growth_chamber_casing",
+            new GrowthChamberCore(AbstractBlock.Settings.create().strength(3f)));
 
     //Non-Block Blocks
     public static final Block OSMIUM_STAIRS = registerBlock("osmium_stairs",

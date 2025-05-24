@@ -14,6 +14,10 @@ public class ModTags {
         public static final TagKey<Block> NEEDS_OSMIUM_TOOL = createTag("needs_osmium_tool");
         public static final TagKey<Block> INCORRECT_FOR_OSMIUM_TOOL = createTag("incorrect_for_osmium_tool");
 
+
+        public static final TagKey<Block> CASING = createTag("casing");
+        public static final TagKey<Block> CORE = createTag("core");
+
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, Identifier.of(TestMod.MOD_ID, name));
 

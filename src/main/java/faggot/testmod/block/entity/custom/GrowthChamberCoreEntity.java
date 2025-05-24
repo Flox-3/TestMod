@@ -30,8 +30,36 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class GrowthChamberBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPos>, ImplementedInventory {
+public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPos>, ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
+
+
+    //Multiblock hoffentlich
+    private int connectedCasings = 0;
+
+    public void incrementConnectedCasings() {
+        connectedCasings++;
+        markDirty();
+        System.out.println("Core at " + pos + " now has " + connectedCasings + " casings.");
+    }
+
+    public void decrementConnectedCasings() {
+        if (connectedCasings > 0) {
+            connectedCasings--;
+            markDirty();
+            System.out.println("Core at " + pos + " now has " + connectedCasings + " casings.");
+        }
+    }
+
+    public int getConnectedCasings() {
+        return connectedCasings;
+    }
+
+
+
+
+
+    //Inventory and shit
 
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_SLOT = 1;
@@ -40,14 +68,14 @@ public class GrowthChamberBlockEntity extends BlockEntity implements ExtendedScr
     private int progress = 0;
     private int maxProgress = 72;
 
-    public GrowthChamberBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.GROWTH_CHAMBER_BE, pos, state);
+    public GrowthChamberCoreEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.GROWTH_CHAMBER_CORE_BE, pos, state);
         this.propertyDelegate = new PropertyDelegate() {
             @Override
             public int get(int index) {
                 return switch (index) {
-                    case 0 -> GrowthChamberBlockEntity.this.progress;
-                    case 1 -> GrowthChamberBlockEntity.this.maxProgress;
+                    case 0 -> GrowthChamberCoreEntity.this.progress;
+                    case 1 -> GrowthChamberCoreEntity.this.maxProgress;
                     default -> 0;
                 };
             }
@@ -55,8 +83,8 @@ public class GrowthChamberBlockEntity extends BlockEntity implements ExtendedScr
             @Override
             public void set(int index, int value) {
                 switch (index) {
-                    case 0: GrowthChamberBlockEntity.this.progress = value;
-                    case 1: GrowthChamberBlockEntity.this.maxProgress = value;
+                    case 0: GrowthChamberCoreEntity.this.progress = value;
+                    case 1: GrowthChamberCoreEntity.this.maxProgress = value;
                 }
             }
 

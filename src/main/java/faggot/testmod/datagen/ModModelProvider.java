@@ -37,7 +37,8 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(ModBlocks.OSMIUM_LOADING_BAR)
                 .coordinate(BlockStateModelGenerator.createBooleanModelMap(OsmiumLoadingBar.CLICKED, OsmiumLoadingBar2, OsmiumLoadingBar1)));
 
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.GROWTH_CHAMBER);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.GROWTH_CHAMBER_CASING);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.GROWTH_CHAMBER_CORE);
 
     }
 
