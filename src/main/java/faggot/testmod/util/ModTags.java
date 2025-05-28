@@ -17,6 +17,7 @@ public class ModTags {
 
         public static final TagKey<Block> CASING = createTag("casing");
         public static final TagKey<Block> CORE = createTag("core");
+        public static final TagKey<Block> CHAMBER_GLASS = createTag("chamber_glass");
 
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, Identifier.of(TestMod.MOD_ID, name));

@@ -37,6 +37,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.PEDESTAL);
                         entries.add(ModBlocks.GROWTH_CHAMBER_CASING);
                         entries.add(ModBlocks.GROWTH_CHAMBER_CORE);
+                        entries.add(ModBlocks.GROWTH_CHAMBER_GLASS);
 
                         entries.add(ModItems.OSMIUM_SWORD);
                         entries.add(ModItems.OSMIUM_SHOVEL);

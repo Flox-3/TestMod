@@ -49,6 +49,8 @@ public class ModBlocks {
             new GrowthChamberCore(AbstractBlock.Settings.create().strength(3f)));
     public static final Block GROWTH_CHAMBER_CASING = registerBlock("growth_chamber_casing",
             new GrowthChamberCasing(AbstractBlock.Settings.create().strength(3f)));
+    public static final Block GROWTH_CHAMBER_GLASS = registerBlock("growth_chamber_glass",
+            new GrowthChamberGlass(AbstractBlock.Settings.create().strength(3f)));
 
     //Non-Block Blocks
     public static final Block OSMIUM_STAIRS = registerBlock("osmium_stairs",

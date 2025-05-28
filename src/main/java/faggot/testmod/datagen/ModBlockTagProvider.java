@@ -46,7 +46,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.GROWTH_CHAMBER_CORE);
 
         getOrCreateTagBuilder(ModTags.Blocks.CASING)
-                .add(ModBlocks.GROWTH_CHAMBER_CASING);
+                .add(ModBlocks.GROWTH_CHAMBER_CASING)
+                .add(ModBlocks.GROWTH_CHAMBER_GLASS);
 
         getOrCreateTagBuilder(BlockTags.FENCES).add(ModBlocks.OSMIUM_FENCE);
         getOrCreateTagBuilder(BlockTags.FENCE_GATES).add(ModBlocks.OSMIUM_FENCE_GATE);

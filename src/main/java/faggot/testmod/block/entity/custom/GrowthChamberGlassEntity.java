@@ -13,9 +13,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public class GrowthChamberCasingEntity extends BlockEntity {
-    public GrowthChamberCasingEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.GROWTH_CHAMBER_CASING_BE, pos, state);
+public class GrowthChamberGlassEntity extends BlockEntity {
+    public GrowthChamberGlassEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.GROWTH_CHAMBER_GLASS_BE, pos, state);
     }
 
     private BlockPos savedCorePos = null;
@@ -47,7 +47,6 @@ public class GrowthChamberCasingEntity extends BlockEntity {
             }
         }
 
-        // Step 1: Directly check for core via tag
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockState neighborState = world.getBlockState(neighborPos);
@@ -59,26 +58,23 @@ public class GrowthChamberCasingEntity extends BlockEntity {
             }
         }
 
-        // Step 2: No direct core — check neighbor casings or glass entities
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockState neighborState = world.getBlockState(neighborPos);
 
             if (neighborState.isIn(ModTags.Blocks.CASING)) {
                 BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
-
-                // ✅ Handle both casing and glass entities
-                if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
-                    if (tryLinkToNeighborCasing(neighborCasing, neighborPos)) return;
-                } else if (neighborEntity instanceof GrowthChamberGlassEntity neighborGlass) {
-                    if (tryLinkToNeighborCasing(neighborGlass, neighborPos)) return;
+                if (neighborEntity instanceof GrowthChamberCasingEntity casing) {
+                    if (tryLinkToNeighborCasing(casing, neighborPos)) return;
+                } else if (neighborEntity instanceof GrowthChamberGlassEntity glass) {
+                    if (tryLinkToNeighborGlass(glass, neighborPos)) return;
                 }
             }
         }
 
-        // Step 3: No core or valid neighbor entity found
-        reset();
-        sendMessage("Casing at " + pos + " is not connected to any core.");
+        savedCorePos = null;
+        coreCount = 0;
+        sendMessage("Glass casing at " + pos + " is not connected to any core.");
     }
 
     private void linkToCore(BlockPos corePos, String messageSource, boolean indirectly, @Nullable BlockPos viaCasing) {
@@ -90,35 +86,33 @@ public class GrowthChamberCasingEntity extends BlockEntity {
         BlockEntity be = world.getBlockEntity(corePos);
         if (be instanceof GrowthChamberCoreEntity coreEntity) {
             coreEntity.incrementConnectedCasings();
-            sendMessage("Casing at " + pos + " connected " + messageSource + " at " + corePos +
+            sendMessage("Glass casing at " + pos + " connected " + messageSource + " at " + corePos +
                     " | Core casing count: " + coreEntity.getConnectedCasings());
         }
     }
 
-    // ✅ Generalized method to handle either casing or glass
-    private boolean tryLinkToNeighborCasing(Object neighbor, BlockPos neighborPos) {
-        if (neighbor instanceof GrowthChamberCasingEntity casing) {
-            if (casing.getCoreCount() == 1) {
-                if (casing.isLinkedIndirectly() && casing.getLinkedViaCasing().equals(this.pos)) {
-                    forceNeighborsToCheckCoreOnBroken();
-                    return false;
-                }
-
-                linkToCore(casing.getSavedCorePos(), "via neighbor casing at " + neighborPos, true, neighborPos);
-                forceNeighborsToCheckCore();
-                return true;
+    private boolean tryLinkToNeighborCasing(GrowthChamberCasingEntity neighborCasing, BlockPos neighborPos) {
+        if (neighborCasing.getCoreCount() == 1) {
+            if (neighborCasing.isLinkedIndirectly() && neighborCasing.getLinkedViaCasing().equals(this.pos)) {
+                forceNeighborsToCheckCoreOnBroken();
+                return false;
             }
-        } else if (neighbor instanceof GrowthChamberGlassEntity glass) {
-            if (glass.getCoreCount() == 1) {
-                if (glass.isLinkedIndirectly() && glass.getLinkedViaCasing().equals(this.pos)) {
-                    forceNeighborsToCheckCoreOnBroken();
-                    return false;
-                }
+            linkToCore(neighborCasing.getSavedCorePos(), "via neighbor casing at " + neighborPos, true, neighborPos);
+            forceNeighborsToCheckCore();
+            return true;
+        }
+        return false;
+    }
 
-                linkToCore(glass.getSavedCorePos(), "via neighbor glass at " + neighborPos, true, neighborPos);
-                forceNeighborsToCheckCore();
-                return true;
+    private boolean tryLinkToNeighborGlass(GrowthChamberGlassEntity neighborGlass, BlockPos neighborPos) {
+        if (neighborGlass.getCoreCount() == 1) {
+            if (neighborGlass.isLinkedIndirectly() && neighborGlass.getLinkedViaCasing().equals(this.pos)) {
+                forceNeighborsToCheckCoreOnBroken();
+                return false;
             }
+            linkToCore(neighborGlass.getSavedCorePos(), "via neighbor glass at " + neighborPos, true, neighborPos);
+            forceNeighborsToCheckCore();
+            return true;
         }
         return false;
     }
@@ -127,18 +121,12 @@ public class GrowthChamberCasingEntity extends BlockEntity {
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockState neighborState = world.getBlockState(neighborPos);
-
             if (neighborState.isIn(ModTags.Blocks.CASING)) {
                 BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
-
-                if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
-                    if (neighborCasing.getCoreCount() == 0) {
-                        neighborCasing.checkForCoreBlocks();
-                    }
-                } else if (neighborEntity instanceof GrowthChamberGlassEntity neighborGlass) {
-                    if (neighborGlass.getCoreCount() == 0) {
-                        neighborGlass.checkForCoreBlocks();
-                    }
+                if (neighborEntity instanceof GrowthChamberCasingEntity casing && casing.getCoreCount() == 0) {
+                    casing.checkForCoreBlocks();
+                } else if (neighborEntity instanceof GrowthChamberGlassEntity glass && glass.getCoreCount() == 0) {
+                    glass.checkForCoreBlocks();
                 }
             }
         }
@@ -150,14 +138,12 @@ public class GrowthChamberCasingEntity extends BlockEntity {
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockState neighborState = world.getBlockState(neighborPos);
-
             if (neighborState.isIn(ModTags.Blocks.CASING)) {
                 BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
-
-                if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
-                    neighborCasing.checkForCoreBlocks();
-                } else if (neighborEntity instanceof GrowthChamberGlassEntity neighborGlass) {
-                    neighborGlass.checkForCoreBlocks();
+                if (neighborEntity instanceof GrowthChamberCasingEntity casing) {
+                    casing.checkForCoreBlocks();
+                } else if (neighborEntity instanceof GrowthChamberGlassEntity glass) {
+                    glass.checkForCoreBlocks();
                 }
             }
         }

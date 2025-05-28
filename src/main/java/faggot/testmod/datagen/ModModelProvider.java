@@ -39,6 +39,7 @@ public class ModModelProvider extends FabricModelProvider {
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.GROWTH_CHAMBER_CASING);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.GROWTH_CHAMBER_CORE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.GROWTH_CHAMBER_GLASS);
 
     }
 
