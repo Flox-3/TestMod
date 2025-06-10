@@ -22,6 +22,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +38,14 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
 
     //Multiblock hoffentlich
     private int connectedCasings = 0;
+    private int xMin = pos.getX();
+    private int yMin = pos.getY();
+    private int zMin = pos.getZ();
+    private int xMax = pos.getX();
+    private int yMax = pos.getY();
+    private int zMax = pos.getZ();
+    private boolean isMultiblockValid = false;
+    private boolean isInitialized = false;
 
     public void incrementConnectedCasings() {
         connectedCasings++;
@@ -52,9 +61,37 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         }
     }
 
+    public void updateMultiblockSize(BlockPos casingPos) {
+        int cx = casingPos.getX();
+        int cy = casingPos.getY();
+        int cz = casingPos.getZ();
+
+        if (cx < xMin) { xMin = cx;}
+        if (cx > xMax) { xMax = cx;}
+
+        if (cy < yMin) { yMin = cy;}
+        if (cy > yMax) { yMax = cy;}
+
+        if (cz < zMin) { zMin = cz;}
+        if (cz > zMax) { zMax = cz;}
+
+        markDirty();
+        sendMessage("Multiblock bounds updated by casing at " + casingPos +
+                ": [" + xMin + "," + xMax + "] [" + yMin + "," + yMax + "] [" + zMin + "," + zMax + "]");
+    }
+
+    private void sendMessage(String msg) {
+        if (!world.isClient && world instanceof ServerWorld serverWorld) {
+            for (ServerPlayerEntity player : serverWorld.getPlayers()) {
+                player.sendMessage(Text.literal(msg), false);
+            }
+        }
+    }
+
     public int getConnectedCasings() {
         return connectedCasings;
     }
+
 
     public void forceNeighborsToCheckForCore() {
         for (Direction direction : Direction.values()) {
@@ -67,6 +104,11 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         }
     }
 
+    public void initializeMultiblock() {
+        if (isMultiblockValid) {
+            isInitialized = true;
+        }
+    }
 
 
 
@@ -135,6 +177,13 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         nbt.putInt("growth_chamber.max_progress", maxProgress);
 
         nbt.putInt("growth_chamber.connected_casings", connectedCasings);
+
+        nbt.putInt("lowest_x_coordination_of_multiblock", xMin);
+        nbt.putInt("lowest_y_coordination_of_multiblock", yMin);
+        nbt.putInt("lowest_z_coordination_of_multiblock", zMin);
+        nbt.putInt("biggest_x_coordination_of_multiblock", xMax);
+        nbt.putInt("biggest_y_coordination_of_multiblock", yMax);
+        nbt.putInt("biggest_z_coordination_of_multiblock", zMax);
     }
 
     @Override
@@ -144,6 +193,13 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         maxProgress = nbt.getInt("growth_chamber.max_progress");
 
         connectedCasings = nbt.getInt("growth_chamber.connected_casings");
+
+        xMin = nbt.getInt("lowest_x_coordination_of_multiblock");
+        yMin = nbt.getInt("lowest_y_coordination_of_multiblock");
+        zMin = nbt.getInt("lowest_z_coordination_of_multiblock");
+        xMax = nbt.getInt("biggest_x_coordination_of_multiblock");
+        yMax = nbt.getInt("biggest_y_coordination_of_multiblock");
+        zMax = nbt.getInt("biggest_z_coordination_of_multiblock");
 
         super.readNbt(nbt, registryLookup);
     }

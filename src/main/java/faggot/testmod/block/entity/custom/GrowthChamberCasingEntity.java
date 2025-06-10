@@ -1,5 +1,6 @@
 package faggot.testmod.block.entity.custom;
 
+import faggot.testmod.block.custom.GrowthChamberCasing;
 import faggot.testmod.block.entity.ModBlockEntities;
 import faggot.testmod.util.ModTags;
 import net.minecraft.block.BlockState;
@@ -13,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public class GrowthChamberCasingEntity extends BlockEntity {
+public class GrowthChamberCasingEntity extends BlockEntity implements GrowthChamberGlassEntity{
     public GrowthChamberCasingEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GROWTH_CHAMBER_CASING_BE, pos, state);
     }
@@ -92,6 +93,7 @@ public class GrowthChamberCasingEntity extends BlockEntity {
             coreEntity.incrementConnectedCasings();
             sendMessage("Casing at " + pos + " connected " + messageSource + " at " + corePos +
                     " | Core casing count: " + coreEntity.getConnectedCasings());
+            updateMultiblockSize(pos);
         }
     }
 
@@ -162,6 +164,18 @@ public class GrowthChamberCasingEntity extends BlockEntity {
             }
         }
     }
+
+    public void updateMultiblockSize(BlockPos casingPos) {
+        if (savedCorePos == null) return;
+
+        BlockEntity be = world.getBlockEntity(savedCorePos);
+        if (be instanceof GrowthChamberCoreEntity coreEntity) {
+            coreEntity.updateMultiblockSize(casingPos); // Pass the casing’s position to the core
+        }
+        coreEnt
+    }
+
+
 
     public void reset() {
         savedCorePos = null;
