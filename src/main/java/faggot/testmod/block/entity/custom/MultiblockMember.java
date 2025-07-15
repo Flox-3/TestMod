@@ -22,10 +22,10 @@ public interface MultiblockMember {
     int getCoreCount();
     void setCoreCount(int count);
 
-    // Force check for core (recursive search typically)
+    // Force check for core (typically recursive search logic)
     void checkForCoreBlocks();
 
-    // Convenience methods
+    // Check if linked
     default boolean isLinkedToCore() {
         return getCorePos() != null;
     }
@@ -41,7 +41,6 @@ public interface MultiblockMember {
         setLinkedViaCasing(null);
     }
 
-    // NBT serialization
     default void readMultiblockDataFromNbt(NbtCompound nbt) {
         if (nbt.contains("CoreX") && nbt.contains("CoreY") && nbt.contains("CoreZ")) {
             setCorePos(new BlockPos(nbt.getInt("CoreX"), nbt.getInt("CoreY"), nbt.getInt("CoreZ")));
@@ -52,7 +51,7 @@ public interface MultiblockMember {
         setCoreCount(nbt.getInt("CoreCount"));
         setLinkedIndirectly(nbt.getBoolean("LinkedIndirectly"));
 
-        if (nbt.contains("LinkedX") && nbt.contains("LinkedY") && nbt.contains("LinkedZ")) {
+        if (nbt.contains("LinkedX")) {
             setLinkedViaCasing(new BlockPos(nbt.getInt("LinkedX"), nbt.getInt("LinkedY"), nbt.getInt("LinkedZ")));
         } else {
             setLinkedViaCasing(null);

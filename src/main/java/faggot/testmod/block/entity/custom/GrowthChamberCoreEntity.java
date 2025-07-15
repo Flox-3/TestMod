@@ -32,122 +32,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPos>, ImplementedInventory, MultiblockMember {
-
+public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPos>, ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
-    // MultiblockMember fields
-    @Nullable
-    private BlockPos corePos = null;
-    private int coreCount = 0;
-    private boolean linkedIndirectly = false;
-    @Nullable
-    private BlockPos linkedViaCasing = null;
 
-    // Multiblock structure bounds & state
+    //Multiblock hoffentlich
     private int connectedCasings = 0;
-    private int xMin;
-    private int yMin;
-    private int zMin;
-    private int xMax;
-    private int yMax;
-    private int zMax;
+    private int xMin = pos.getX();
+    private int yMin = pos.getY();
+    private int zMin = pos.getZ();
+    private int xMax = pos.getX();
+    private int yMax = pos.getY();
+    private int zMax = pos.getZ();
     private boolean isMultiblockValid = false;
     private boolean isInitialized = false;
-
-    // Crafting fields
-    private static final int INPUT_SLOT = 0;
-    private static final int OUTPUT_SLOT = 1;
-
-    private int progress = 0;
-    private int maxProgress = 72;
-
-    protected final PropertyDelegate propertyDelegate;
-
-    public GrowthChamberCoreEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.GROWTH_CHAMBER_CORE_BE, pos, state);
-
-        // Initialize multiblock bounds to the core position
-        this.xMin = pos.getX();
-        this.yMin = pos.getY();
-        this.zMin = pos.getZ();
-        this.xMax = pos.getX();
-        this.yMax = pos.getY();
-        this.zMax = pos.getZ();
-
-        this.propertyDelegate = new PropertyDelegate() {
-            @Override
-            public int get(int index) {
-                return switch (index) {
-                    case 0 -> GrowthChamberCoreEntity.this.progress;
-                    case 1 -> GrowthChamberCoreEntity.this.maxProgress;
-                    default -> 0;
-                };
-            }
-
-            @Override
-            public void set(int index, int value) {
-                switch (index) {
-                    case 0 -> GrowthChamberCoreEntity.this.progress = value;
-                    case 1 -> GrowthChamberCoreEntity.this.maxProgress = value;
-                }
-            }
-
-            @Override
-            public int size() {
-                return 2;
-            }
-        };
-    }
-
-    // MultiblockMember interface implementation
-    @Override
-    public @Nullable BlockPos getCorePos() {
-        return corePos;
-    }
-
-    @Override
-    public void setCorePos(@Nullable BlockPos pos) {
-        this.corePos = pos;
-    }
-
-    @Override
-    public boolean isLinkedIndirectly() {
-        return linkedIndirectly;
-    }
-
-    @Override
-    public void setLinkedIndirectly(boolean indirect) {
-        this.linkedIndirectly = indirect;
-    }
-
-    @Override
-    public @Nullable BlockPos getLinkedViaCasing() {
-        return linkedViaCasing;
-    }
-
-    @Override
-    public void setLinkedViaCasing(@Nullable BlockPos pos) {
-        this.linkedViaCasing = pos;
-    }
-
-    @Override
-    public int getCoreCount() {
-        return coreCount;
-    }
-
-    @Override
-    public void setCoreCount(int count) {
-        this.coreCount = count;
-    }
-
-    @Override
-    public void checkForCoreBlocks() {
-        // For core block, this might be no-op or could implement scanning if needed
-        // You can add your own logic here if needed.
-    }
-
-    // Additional multiblock management
 
     public void incrementConnectedCasings() {
         connectedCasings++;
@@ -168,14 +66,14 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         int cy = casingPos.getY();
         int cz = casingPos.getZ();
 
-        if (cx < xMin) xMin = cx;
-        if (cx > xMax) xMax = cx;
+        if (cx < xMin) { xMin = cx;}
+        if (cx > xMax) { xMax = cx;}
 
-        if (cy < yMin) yMin = cy;
-        if (cy > yMax) yMax = cy;
+        if (cy < yMin) { yMin = cy;}
+        if (cy > yMax) { yMax = cy;}
 
-        if (cz < zMin) zMin = cz;
-        if (cz > zMax) zMax = cz;
+        if (cz < zMin) { zMin = cz;}
+        if (cz > zMax) { zMax = cz;}
 
         markDirty();
         sendMessage("Multiblock bounds updated by casing at " + casingPos +
@@ -194,6 +92,7 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         return connectedCasings;
     }
 
+
     public void forceNeighborsToCheckForCore() {
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
@@ -211,7 +110,48 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         }
     }
 
-    // Inventory & crafting
+
+
+    //Inventory and shit
+
+    private static final int INPUT_SLOT = 0;
+    private static final int OUTPUT_SLOT = 1;
+
+    protected final PropertyDelegate propertyDelegate;
+    private int progress = 0;
+    private int maxProgress = 72;
+
+    public GrowthChamberCoreEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.GROWTH_CHAMBER_CORE_BE, pos, state);
+        this.propertyDelegate = new PropertyDelegate() {
+            @Override
+            public int get(int index) {
+                return switch (index) {
+                    case 0 -> GrowthChamberCoreEntity.this.progress;
+                    case 1 -> GrowthChamberCoreEntity.this.maxProgress;
+                    default -> 0;
+                };
+            }
+
+            @Override
+            public void set(int index, int value) {
+                switch (index) {
+                    case 0: GrowthChamberCoreEntity.this.progress = value;
+                    case 1: GrowthChamberCoreEntity.this.maxProgress = value;
+                }
+            }
+
+            @Override
+            public int size() {
+                return 2;
+            }
+        };
+    }
+
+    @Override
+    public BlockPos getScreenOpeningData(ServerPlayerEntity player) {
+        return this.pos;
+    }
 
     @Override
     public DefaultedList<ItemStack> getItems() {
@@ -230,14 +170,8 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
     }
 
     @Override
-    public BlockPos getScreenOpeningData(ServerPlayerEntity player) {
-        return this.pos;
-    }
-
-    @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.writeNbt(nbt, registryLookup);
-
         Inventories.writeNbt(nbt, inventory, registryLookup);
         nbt.putInt("growth_chamber.progress", progress);
         nbt.putInt("growth_chamber.max_progress", maxProgress);
@@ -250,9 +184,6 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         nbt.putInt("biggest_x_coordination_of_multiblock", xMax);
         nbt.putInt("biggest_y_coordination_of_multiblock", yMax);
         nbt.putInt("biggest_z_coordination_of_multiblock", zMax);
-
-        // Write multiblock member data
-        writeMultiblockDataToNbt(nbt);
     }
 
     @Override
@@ -270,18 +201,15 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         yMax = nbt.getInt("biggest_y_coordination_of_multiblock");
         zMax = nbt.getInt("biggest_z_coordination_of_multiblock");
 
-        // Read multiblock member data
-        readMultiblockDataFromNbt(nbt);
-
         super.readNbt(nbt, registryLookup);
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
-        if (hasRecipe()) {
+        if(hasRecipe()) {
             increaseCraftingProgress();
             markDirty(world, pos, state);
 
-            if (hasCraftingFinished()) {
+            if(hasCraftingFinished()) {
                 craftItem();
                 resetProgress();
             }
@@ -298,13 +226,11 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
     private void craftItem() {
         Optional<RecipeEntry<GrowthChamberRecipe>> recipe = getCurrentRecipe();
 
-        if (recipe.isPresent()) {
-            ItemStack output = recipe.get().value().output();
+        ItemStack output = recipe.get().value().output();
 
-            this.removeStack(INPUT_SLOT, 1);
-            this.setStack(OUTPUT_SLOT, new ItemStack(output.getItem(),
-                    this.getStack(OUTPUT_SLOT).getCount() + output.getCount()));
-        }
+        this.removeStack(INPUT_SLOT, 1);
+        this.setStack(OUTPUT_SLOT, new ItemStack(output.getItem(),
+                this.getStack(OUTPUT_SLOT).getCount() + output.getCount()));
     }
 
     private boolean hasCraftingFinished() {
