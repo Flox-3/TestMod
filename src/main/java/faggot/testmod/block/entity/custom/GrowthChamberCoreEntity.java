@@ -44,8 +44,8 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
     private int xMax = pos.getX();
     private int yMax = pos.getY();
     private int zMax = pos.getZ();
-    private boolean isMultiblockValid = false;
-    private boolean isInitialized = false;
+    public boolean isMultiblockValid = true;
+    public boolean isInitialized = false;
 
     public void incrementConnectedCasings() {
         connectedCasings++;
@@ -59,6 +59,10 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
             markDirty();
             System.out.println("Core at " + pos + " now has " + connectedCasings + " casings.");
         }
+    }
+
+    public void setInitializedfalse() {
+        isInitialized = false;
     }
 
     public void updateMultiblockSize(BlockPos casingPos) {
@@ -106,9 +110,25 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
 
     public void initializeMultiblock() {
         if (isMultiblockValid) {
-            isInitialized = true;
+
+            int wallthickness = 1;
+
+            int width = xMax - xMin + wallthickness;
+            int height = yMax - yMin + wallthickness;
+            int depth = zMax - zMin + wallthickness;
+            int volume = width * height * depth;
+            int freevolume = (width - wallthickness * 2) * (height - wallthickness * 2) * (depth - wallthickness * 2);
+            int expectedcasings = volume - freevolume - 1;
+
+            sendMessage("Multiblock initialized: Size = " + width + "×" + height + "×" + depth +
+                    ", Volume = " + volume + " blocks");
+            if (expectedcasings == connectedCasings)
+                isInitialized = true;
+        } else {
+            sendMessage("Tried to initialize multiblock, but it's invalid.");
         }
     }
+
 
 
 

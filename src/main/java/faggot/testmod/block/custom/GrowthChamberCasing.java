@@ -63,18 +63,20 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
             if (blockEntity instanceof GrowthChamberCasingEntity casing) {
                 BlockPos corePos = casing.getCorePos();
 
-                if (corePos != null) {
-                    BlockEntity coreEntity = world.getBlockEntity(corePos);
-                    if (coreEntity instanceof GrowthChamberCoreEntity core) {
-                        core.decrementConnectedCasings();
-                    }
-                }
                 if (!world.isClient) {
                     BlockEntity be = world.getBlockEntity(pos);
                     if (be instanceof GrowthChamberCasingEntity) {
                         casing.forceNeighborsToCheckCoreOnBroken();
                     }
                 }
+
+                if (corePos != null) {
+                    BlockEntity coreEntity = world.getBlockEntity(corePos);
+                    if (coreEntity instanceof GrowthChamberCoreEntity core) {
+                        core.decrementConnectedCasings();
+                    }
+                }
+
             }
 
             super.onStateReplaced(state, world, pos, newState, moved);

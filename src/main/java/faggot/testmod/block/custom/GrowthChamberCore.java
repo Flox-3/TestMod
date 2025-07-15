@@ -74,14 +74,27 @@ public class GrowthChamberCore extends BlockWithEntity implements BlockEntityPro
     @Override
     protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
                                              PlayerEntity player, Hand hand, BlockHitResult hit) {
+
         if (!world.isClient) {
-            NamedScreenHandlerFactory screenHandlerFactory = ((GrowthChamberCoreEntity) world.getBlockEntity(pos));
-            if (screenHandlerFactory != null) {
-                player.openHandledScreen(screenHandlerFactory);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+
+            if (blockEntity instanceof GrowthChamberCoreEntity core) {
+                if (!core.isInitialized) {
+                    core.initializeMultiblock();
+                    return ItemActionResult.SUCCESS;
+                } else {
+                    NamedScreenHandlerFactory screenHandlerFactory = core;
+                    if (screenHandlerFactory != null) {
+                        player.openHandledScreen(screenHandlerFactory);
+                    }
+                    return ItemActionResult.SUCCESS;
+                }
             }
         }
-        return ItemActionResult.SUCCESS;
+
+        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
+
 
     @Nullable
     @Override

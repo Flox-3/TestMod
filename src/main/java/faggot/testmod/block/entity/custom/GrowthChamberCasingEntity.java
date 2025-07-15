@@ -68,15 +68,12 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
 
     @Override
     public void checkForCoreBlocks() {
-        // Unlink from existing core (if any)
+        // Unlink if currently connected
         if (corePos != null) {
-            BlockEntity coreEntity = world.getBlockEntity(corePos);
-            if (coreEntity instanceof GrowthChamberCoreEntity core) {
-                core.decrementConnectedCasings();
-            }
+            unlinkFromCore();
         }
 
-        // Try to directly link to a core
+        // === Try to link directly to a core ===
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockState neighborState = world.getBlockState(neighborPos);
@@ -88,29 +85,44 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
             }
         }
 
-        // Try to link indirectly through a neighboring member
+        // === Try to link indirectly through other casings ===
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
 
             if (neighborEntity instanceof MultiblockMember neighborMember) {
                 if (neighborMember.getCoreCount() == 1) {
-                    if (neighborMember.isLinkedIndirectly() &&
-                            neighborPos.equals(neighborMember.getLinkedViaCasing())) {
-                        forceNeighborsToCheckCoreOnBroken();
+                    BlockPos coreCandidate = neighborMember.getCorePos();
+                    if (coreCandidate != null) {
+                        linkToCore(coreCandidate, "via neighbor at " + neighborPos, true, neighborPos);
+                        forceNeighborsToCheckCore();
                         return;
                     }
-                    linkToCore(neighborMember.getCorePos(), "via neighbor member at " + neighborPos, true, neighborPos);
-                    forceNeighborsToCheckCore();
-                    return;
                 }
             }
         }
 
-        // No core found — reset
+        // === No core found — reset ===
         reset();
         sendMessage("Casing at " + pos + " is not connected to any core.");
     }
+
+    public void unlinkFromCore() {
+        if (corePos != null) {
+            BlockEntity coreEntity = world.getBlockEntity(corePos);
+            if (coreEntity instanceof GrowthChamberCoreEntity core) {
+                core.decrementConnectedCasings();
+                core.setInitializedfalse(); // <- Added here
+            }
+        }
+
+        corePos = null;
+        coreCount = 0;
+        linkedIndirectly = false;
+        linkedViaCasing = null;
+    }
+
+
 
     private void linkToCore(BlockPos corePos, String messageSource, boolean indirectly, @Nullable BlockPos viaCasing) {
         setCorePos(corePos);
@@ -164,6 +176,16 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
         unlinkFromCore();
         markDirty();
     }
+
+    public void notifyCoreOfCasingBreak() {
+        if (corePos != null) {
+            BlockEntity be = world.getBlockEntity(corePos);
+            if (be instanceof GrowthChamberCoreEntity coreEntity) {
+                coreEntity.setInitializedfalse();
+            }
+        }
+    }
+
 
     private void sendMessage(String msg) {
         if (!world.isClient && world instanceof ServerWorld serverWorld) {
