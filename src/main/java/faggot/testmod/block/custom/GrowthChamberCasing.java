@@ -61,7 +61,7 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
             if (blockEntity instanceof GrowthChamberCasingEntity casing) {
-                BlockPos corePos = casing.getSavedCorePos();
+                BlockPos corePos = casing.getCorePos();
 
                 if (corePos != null) {
                     BlockEntity coreEntity = world.getBlockEntity(corePos);

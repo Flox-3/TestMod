@@ -58,7 +58,7 @@ public class GrowthChamberGlass extends BlockWithEntity implements BlockEntityPr
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
             if (blockEntity instanceof GrowthChamberGlassEntity glass) {
-                BlockPos corePos = glass.getSavedCorePos();
+                BlockPos corePos = glass.getCorePos();
 
                 if (corePos != null) {
                     BlockEntity coreEntity = world.getBlockEntity(corePos);

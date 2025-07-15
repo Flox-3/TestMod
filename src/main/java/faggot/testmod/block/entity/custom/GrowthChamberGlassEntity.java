@@ -4,6 +4,7 @@ import faggot.testmod.block.entity.ModBlockEntities;
 import faggot.testmod.util.ModTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -13,40 +14,69 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public class GrowthChamberGlassEntity extends BlockEntity {
-    public GrowthChamberGlassEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.GROWTH_CHAMBER_GLASS_BE, pos, state);
-    }
-
-    private BlockPos savedCorePos = null;
+public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockMember {
+    private BlockPos corePos = null;
     private int coreCount = 0;
     private boolean linkedIndirectly = false;
     private BlockPos linkedViaCasing = null;
 
+    public GrowthChamberGlassEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.GROWTH_CHAMBER_GLASS_BE, pos, state);
+    }
+
+    // === MultiblockMember backing fields ===
+
+    @Override
+    public @Nullable BlockPos getCorePos() {
+        return corePos;
+    }
+
+    @Override
+    public void setCorePos(@Nullable BlockPos pos) {
+        this.corePos = pos;
+    }
+
+    @Override
     public boolean isLinkedIndirectly() {
         return linkedIndirectly;
     }
 
-    public BlockPos getLinkedViaCasing() {
+    @Override
+    public void setLinkedIndirectly(boolean indirect) {
+        this.linkedIndirectly = indirect;
+    }
+
+    @Override
+    public @Nullable BlockPos getLinkedViaCasing() {
         return linkedViaCasing;
     }
 
+    @Override
+    public void setLinkedViaCasing(@Nullable BlockPos pos) {
+        this.linkedViaCasing = pos;
+    }
+
+    @Override
     public int getCoreCount() {
         return coreCount;
     }
 
-    public BlockPos getSavedCorePos() {
-        return savedCorePos;
+    @Override
+    public void setCoreCount(int count) {
+        this.coreCount = count;
     }
 
+    @Override
     public void checkForCoreBlocks() {
-        if (savedCorePos != null) {
-            BlockEntity coreEntity = world.getBlockEntity(savedCorePos);
+        // Unlink from existing core (if any)
+        if (corePos != null) {
+            BlockEntity coreEntity = world.getBlockEntity(corePos);
             if (coreEntity instanceof GrowthChamberCoreEntity core) {
                 core.decrementConnectedCasings();
             }
         }
 
+        // Try to directly link to a core
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockState neighborState = world.getBlockState(neighborPos);
@@ -58,75 +88,53 @@ public class GrowthChamberGlassEntity extends BlockEntity {
             }
         }
 
+        // Try to link indirectly through a neighboring member
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
-            BlockState neighborState = world.getBlockState(neighborPos);
+            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
 
-            if (neighborState.isIn(ModTags.Blocks.CASING)) {
-                BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
-                if (neighborEntity instanceof GrowthChamberCasingEntity casing) {
-                    if (tryLinkToNeighborCasing(casing, neighborPos)) return;
-                } else if (neighborEntity instanceof GrowthChamberGlassEntity glass) {
-                    if (tryLinkToNeighborGlass(glass, neighborPos)) return;
+            if (neighborEntity instanceof MultiblockMember neighborMember) {
+                if (neighborMember.getCoreCount() == 1) {
+                    if (neighborMember.isLinkedIndirectly() &&
+                            neighborPos.equals(neighborMember.getLinkedViaCasing())) {
+                        forceNeighborsToCheckCoreOnBroken();
+                        return;
+                    }
+                    linkToCore(neighborMember.getCorePos(), "via neighbor member at " + neighborPos, true, neighborPos);
+                    forceNeighborsToCheckCore();
+                    return;
                 }
             }
         }
 
-        savedCorePos = null;
-        coreCount = 0;
-        sendMessage("Glass casing at " + pos + " is not connected to any core.");
+        // No core found — reset
+        reset();
+        sendMessage("Casing at " + pos + " is not connected to any core.");
     }
 
     private void linkToCore(BlockPos corePos, String messageSource, boolean indirectly, @Nullable BlockPos viaCasing) {
-        savedCorePos = corePos;
-        coreCount = 1;
-        linkedIndirectly = indirectly;
-        linkedViaCasing = viaCasing;
+        setCorePos(corePos);
+        setCoreCount(1);
+        setLinkedIndirectly(indirectly);
+        setLinkedViaCasing(viaCasing);
 
         BlockEntity be = world.getBlockEntity(corePos);
         if (be instanceof GrowthChamberCoreEntity coreEntity) {
             coreEntity.incrementConnectedCasings();
-            sendMessage("Glass casing at " + pos + " connected " + messageSource + " at " + corePos +
+            sendMessage("Casing at " + pos + " connected " + messageSource + " at " + corePos +
                     " | Core casing count: " + coreEntity.getConnectedCasings());
+            updateMultiblockSize(pos);
         }
-    }
-
-    private boolean tryLinkToNeighborCasing(GrowthChamberCasingEntity neighborCasing, BlockPos neighborPos) {
-        if (neighborCasing.getCoreCount() == 1) {
-            if (neighborCasing.isLinkedIndirectly() && neighborCasing.getLinkedViaCasing().equals(this.pos)) {
-                forceNeighborsToCheckCoreOnBroken();
-                return false;
-            }
-            linkToCore(neighborCasing.getSavedCorePos(), "via neighbor casing at " + neighborPos, true, neighborPos);
-            forceNeighborsToCheckCore();
-            return true;
-        }
-        return false;
-    }
-
-    private boolean tryLinkToNeighborGlass(GrowthChamberGlassEntity neighborGlass, BlockPos neighborPos) {
-        if (neighborGlass.getCoreCount() == 1) {
-            if (neighborGlass.isLinkedIndirectly() && neighborGlass.getLinkedViaCasing().equals(this.pos)) {
-                forceNeighborsToCheckCoreOnBroken();
-                return false;
-            }
-            linkToCore(neighborGlass.getSavedCorePos(), "via neighbor glass at " + neighborPos, true, neighborPos);
-            forceNeighborsToCheckCore();
-            return true;
-        }
-        return false;
     }
 
     public void forceNeighborsToCheckCore() {
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
-            BlockState neighborState = world.getBlockState(neighborPos);
-            if (neighborState.isIn(ModTags.Blocks.CASING)) {
-                BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
-                if (neighborEntity instanceof GrowthChamberCasingEntity casing && casing.getCoreCount() == 0) {
-                    casing.checkForCoreBlocks();
-                } else if (neighborEntity instanceof GrowthChamberGlassEntity glass && glass.getCoreCount() == 0) {
-                    glass.checkForCoreBlocks();
+            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+
+            if (neighborEntity instanceof MultiblockMember neighborMember) {
+                if (neighborMember.getCoreCount() == 0) {
+                    neighborMember.checkForCoreBlocks();
                 }
             }
         }
@@ -134,26 +142,26 @@ public class GrowthChamberGlassEntity extends BlockEntity {
 
     public void forceNeighborsToCheckCoreOnBroken() {
         reset();
-
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
-            BlockState neighborState = world.getBlockState(neighborPos);
-            if (neighborState.isIn(ModTags.Blocks.CASING)) {
-                BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
-                if (neighborEntity instanceof GrowthChamberCasingEntity casing) {
-                    casing.checkForCoreBlocks();
-                } else if (neighborEntity instanceof GrowthChamberGlassEntity glass) {
-                    glass.checkForCoreBlocks();
-                }
+            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+            if (neighborEntity instanceof MultiblockMember neighborMember) {
+                neighborMember.checkForCoreBlocks();
             }
         }
     }
 
+    public void updateMultiblockSize(BlockPos casingPos) {
+        if (corePos == null) return;
+
+        BlockEntity be = world.getBlockEntity(corePos);
+        if (be instanceof GrowthChamberCoreEntity coreEntity) {
+            coreEntity.updateMultiblockSize(casingPos);
+        }
+    }
+
     public void reset() {
-        savedCorePos = null;
-        coreCount = 0;
-        linkedIndirectly = false;
-        linkedViaCasing = null;
+        unlinkFromCore();
         markDirty();
     }
 
@@ -165,50 +173,17 @@ public class GrowthChamberGlassEntity extends BlockEntity {
         }
     }
 
+    // === NBT ===
+
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.writeNbt(nbt, registryLookup);
-
-        if (savedCorePos != null) {
-            nbt.putInt("core_x", savedCorePos.getX());
-            nbt.putInt("core_y", savedCorePos.getY());
-            nbt.putInt("core_z", savedCorePos.getZ());
-        }
-        if (linkedIndirectly && linkedViaCasing != null) {
-            nbt.putBoolean("linked_indirectly", true);
-            nbt.putInt("linked_x", linkedViaCasing.getX());
-            nbt.putInt("linked_y", linkedViaCasing.getY());
-            nbt.putInt("linked_z", linkedViaCasing.getZ());
-        }
-
-        nbt.putInt("core_count", coreCount);
+        writeMultiblockDataToNbt(nbt);
     }
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
-
-        if (nbt.contains("core_x")) {
-            savedCorePos = new BlockPos(
-                    nbt.getInt("core_x"),
-                    nbt.getInt("core_y"),
-                    nbt.getInt("core_z")
-            );
-        } else {
-            savedCorePos = null;
-        }
-
-        linkedIndirectly = nbt.getBoolean("linked_indirectly");
-        if (linkedIndirectly) {
-            linkedViaCasing = new BlockPos(
-                    nbt.getInt("linked_x"),
-                    nbt.getInt("linked_y"),
-                    nbt.getInt("linked_z")
-            );
-        } else {
-            linkedViaCasing = null;
-        }
-
-        coreCount = nbt.getInt("core_count");
+        readMultiblockDataFromNbt(nbt);
     }
 }
