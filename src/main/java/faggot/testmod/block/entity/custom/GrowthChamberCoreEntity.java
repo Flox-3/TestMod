@@ -37,13 +37,13 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
 
 
     //Multiblock hoffentlich
-    private int connectedCasings = 0;
-    private int xMin = pos.getX();
-    private int yMin = pos.getY();
-    private int zMin = pos.getZ();
-    private int xMax = pos.getX();
-    private int yMax = pos.getY();
-    private int zMax = pos.getZ();
+    public int connectedCasings = 0;
+    public int xMin = pos.getX();
+    public int yMin = pos.getY();
+    public int zMin = pos.getZ();
+    public int xMax = pos.getX();
+    public int yMax = pos.getY();
+    public int zMax = pos.getZ();
     public boolean isMultiblockValid = true;
     public boolean isInitialized = false;
 
@@ -52,6 +52,12 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         markDirty();
         System.out.println("Core at " + pos + " now has " + connectedCasings + " casings.");
     }
+
+    public void setMultiblockValid(boolean valid) {
+        this.isMultiblockValid = valid;
+        markDirty();
+    }
+
 
     public void decrementConnectedCasings() {
         if (connectedCasings > 0) {

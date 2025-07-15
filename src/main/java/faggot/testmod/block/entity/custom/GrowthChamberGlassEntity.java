@@ -4,7 +4,6 @@ import faggot.testmod.block.entity.ModBlockEntities;
 import faggot.testmod.util.ModTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -135,7 +134,14 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
             coreEntity.incrementConnectedCasings();
             sendMessage("Casing at " + pos + " connected " + messageSource + " at " + corePos +
                     " | Core casing count: " + coreEntity.getConnectedCasings());
-            updateMultiblockSize(pos);
+
+            updateMultiblockSize(pos); // updates min/max bounds in core
+
+            // ✅ Validate this casing's boundary placement
+            ValidateMultiblock(
+                    new BlockPos(coreEntity.xMin, coreEntity.yMin, coreEntity.zMin),
+                    new BlockPos(coreEntity.xMax, coreEntity.yMax, coreEntity.zMax)
+            );
         }
     }
 
@@ -208,4 +214,30 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         super.readNbt(nbt, registryLookup);
         readMultiblockDataFromNbt(nbt);
     }
+
+    //casing specific logic
+    public void ValidateMultiblock(BlockPos min, BlockPos max) {
+        int matchCount = 0;
+
+        if (pos.getX() == min.getX() || pos.getX() == max.getX()) matchCount++;
+        if (pos.getY() == min.getY() || pos.getY() == max.getY()) matchCount++;
+        if (pos.getZ() == min.getZ() || pos.getZ() == max.getZ()) matchCount++;
+
+        if (matchCount == 1) {
+            if (corePos != null) {
+                BlockEntity be = world.getBlockEntity(corePos);
+                if (be instanceof GrowthChamberCoreEntity core) {
+                    core.setMultiblockValid(true);
+                }
+            }
+        } else {
+            if (corePos != null) {
+                BlockEntity be = world.getBlockEntity(corePos);
+                if (be instanceof GrowthChamberCoreEntity core) {
+                    core.setMultiblockValid(false);
+                }
+            }
+        }
+    }
+
 }
