@@ -5,40 +5,22 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public interface MultiblockMember {
-
-    // Core position
     @Nullable BlockPos getCorePos();
     void setCorePos(@Nullable BlockPos pos);
 
-    // Indirect linking
     boolean isLinkedIndirectly();
     void setLinkedIndirectly(boolean indirect);
 
-    // Position of the casing this was linked through
     @Nullable BlockPos getLinkedViaCasing();
     void setLinkedViaCasing(@Nullable BlockPos pos);
 
-    // Core count
     int getCoreCount();
     void setCoreCount(int count);
 
-    // Force check for core (typically recursive search logic)
     void checkForCoreBlocks();
 
-    // Check if linked
     default boolean isLinkedToCore() {
         return getCorePos() != null;
-    }
-
-    default void linkToCore(BlockPos corePos) {
-        setCorePos(corePos);
-    }
-
-    default void unlinkFromCore() {
-        setCorePos(null);
-        setCoreCount(0);
-        setLinkedIndirectly(false);
-        setLinkedViaCasing(null);
     }
 
     default void readMultiblockDataFromNbt(NbtCompound nbt) {
