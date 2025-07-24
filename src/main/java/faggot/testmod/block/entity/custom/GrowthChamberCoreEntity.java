@@ -108,11 +108,23 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
             BlockPos neighborPos = pos.offset(direction);
             BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
 
-            if (neighborEntity instanceof GrowthChamberCasingEntity neighborCasing) {
-                neighborCasing.checkForCoreBlocks();
+            if (neighborEntity instanceof GrowthChamberGlassEntity neighborGlass) {
+                neighborGlass.checkForCoreBlocks();
             }
         }
     }
+
+    public void reset() {
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = pos.offset(direction);
+            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+
+            if (neighborEntity instanceof MultiblockMember neighborMember) {
+                neighborMember.reset();
+            }
+        }
+    }
+
 
     public void initializeMultiblock() {
         if (isMultiblockValid) {

@@ -13,6 +13,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockMember {
 
     private BlockPos corePos = null;
@@ -95,7 +98,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
             }
         }
 
-        reset();
+        unlinkFromCore();
         sendMessage("Glass at " + pos + " is not connected to any core.");
     }
 
@@ -104,7 +107,6 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
             BlockEntity coreEntity = world.getBlockEntity(corePos);
             if (coreEntity instanceof GrowthChamberCoreEntity core) {
                 core.decrementConnectedCasings();
-                core.setInitializedfalse();
             }
         }
 
@@ -112,6 +114,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         coreCount = 0;
         linkedIndirectly = false;
         linkedViaCasing = null;
+        markDirty();
     }
 
     private void linkToCore(BlockPos corePos, String messageSource, boolean indirectly, @Nullable BlockPos viaCasing) {
@@ -133,6 +136,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
                     new BlockPos(coreEntity.xMax, coreEntity.yMax, coreEntity.zMax)
             );
         }
+        markDirty();
     }
 
     public void forceNeighborsToCheckCore() {
@@ -147,7 +151,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
     }
 
     public void forceNeighborsToCheckCoreOnBroken() {
-        reset();
+        unlinkFromCore();
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
@@ -166,16 +170,31 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         }
     }
 
+    /**
+     * Reset this block's multiblock data and recursively reset neighbors.
+     * Avoid infinite loops by tracking visited positions.
+     */
+
+
     public void reset() {
         unlinkFromCore();
+
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = pos.offset(direction);
+            BlockEntity neighborBE = world.getBlockEntity(neighborPos);
+
+            if (neighborBE instanceof MultiblockMember neighborMember && neighborMember.getCoreCount() != 0) {
+                neighborMember,reset();
+            }
+        }
         markDirty();
     }
+
 
     public void notifyCoreOfCasingBreak() {
         if (corePos != null) {
             BlockEntity be = world.getBlockEntity(corePos);
             if (be instanceof GrowthChamberCoreEntity coreEntity) {
-                coreEntity.setInitializedfalse();
             }
         }
     }
@@ -191,13 +210,13 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.writeNbt(nbt, registryLookup);
-        writeMultiblockDataToNbt(nbt);
+        writeMultiblockDataToNbt(nbt);  // Use interface default
     }
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
-        readMultiblockDataFromNbt(nbt);
+        readMultiblockDataFromNbt(nbt);  // Use interface default
     }
 
     public void ValidateMultiblock(BlockPos min, BlockPos max) {
