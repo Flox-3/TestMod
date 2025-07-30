@@ -59,13 +59,13 @@ public class GrowthChamberGlass extends BlockWithEntity implements BlockEntityPr
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            if (blockEntity instanceof GrowthChamberGlassEntity glass) {
-                BlockPos corePos = glass.getCorePos();
+            if (blockEntity instanceof MultiblockMember multiblockMember) {
+                BlockPos corePos = multiblockMember.getCorePos();
 
                 if (!world.isClient) {
                     BlockEntity be = world.getBlockEntity(pos);
-                    if (be instanceof GrowthChamberGlassEntity) {
-                        glass.forceNeighborsToCheckCoreOnBroken();
+                    if (be instanceof MultiblockMember ) {
+                        multiblockMember.forceNeighborsToCheckCoreOnBroken();
                     }
                 }
 

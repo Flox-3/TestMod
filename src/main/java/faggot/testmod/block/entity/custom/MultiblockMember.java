@@ -17,12 +17,14 @@ public interface MultiblockMember {
     int getCoreCount();
     void setCoreCount(int count);
 
+
     void reset();
 
     void unlinkFromCore();
 
     void checkForCoreBlocks();
     void forceNeighborsToCheckCore();
+    void forceNeighborsToCheckCoreOnBroken();
 
     default boolean isLinkedToCore() {
         return getCorePos() != null;

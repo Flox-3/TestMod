@@ -1,6 +1,5 @@
 package faggot.testmod.block.entity.custom;
 
-import faggot.testmod.block.custom.GrowthChamberCore;
 import faggot.testmod.block.entity.ModBlockEntities;
 import faggot.testmod.util.ModTags;
 import net.minecraft.block.BlockState;
@@ -13,9 +12,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockMember {
 
@@ -100,8 +96,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         }
 
         unlinkFromCore();
-        markDirty();
-        sendMessage("Casing at " + pos + " is not connected to any core.");
+        sendMessage("Glass at " + pos + " is not connected to any core.");
     }
 
     public void unlinkFromCore() {
@@ -109,7 +104,6 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
             BlockEntity coreEntity = world.getBlockEntity(corePos);
             if (coreEntity instanceof GrowthChamberCoreEntity core) {
                 core.decrementConnectedCasings();
-                core.setInitializedfalse();
             }
         }
 
@@ -117,6 +111,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         coreCount = 0;
         linkedIndirectly = false;
         linkedViaCasing = null;
+        markDirty();
     }
 
     private void linkToCore(BlockPos corePos, String messageSource, boolean indirectly, @Nullable BlockPos viaCasing) {
@@ -152,17 +147,24 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
     }
 
     public void forceNeighborsToCheckCoreOnBroken() {
-        unlinkFromCore();
-        markDirty();
+        BlockPos oldCore = this.corePos; // Store before unlinking
+        unlinkFromCore(); // Unlink this block
+
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+
             if (neighborEntity instanceof MultiblockMember neighborMember) {
-                neighborMember.unlinkFromCore();
-                neighborMember.checkForCoreBlocks();
+                if (neighborMember.getCorePos() != null && neighborMember.getCorePos().equals(oldCore) && neighborMember.isLinkedIndirectly()) {
+                    neighborMember.reset();
+                } else {
+                    neighborMember.checkForCoreBlocks();
+                }
             }
         }
     }
+
+
 
     public void updateMultiblockSize(BlockPos casingPos) {
         if (corePos == null) return;
