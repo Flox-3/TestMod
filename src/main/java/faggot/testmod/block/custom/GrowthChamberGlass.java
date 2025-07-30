@@ -1,8 +1,10 @@
 package faggot.testmod.block.custom;
 
 import com.mojang.serialization.MapCodec;
+import faggot.testmod.block.entity.custom.GrowthChamberCasingEntity;
 import faggot.testmod.block.entity.custom.GrowthChamberCoreEntity;
 import faggot.testmod.block.entity.custom.GrowthChamberGlassEntity;
+import faggot.testmod.block.entity.custom.MultiblockMember;
 import faggot.testmod.util.ModTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -45,9 +47,9 @@ public class GrowthChamberGlass extends BlockWithEntity implements BlockEntityPr
 
         if (!world.isClient) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof GrowthChamberGlassEntity glass) {
-                glass.checkForCoreBlocks();
-                glass.forceNeighborsToCheckCore();
+            if (be instanceof MultiblockMember member) {
+                member.checkForCoreBlocks();
+                member.forceNeighborsToCheckCore();
             }
         }
     }
@@ -60,33 +62,22 @@ public class GrowthChamberGlass extends BlockWithEntity implements BlockEntityPr
             if (blockEntity instanceof GrowthChamberGlassEntity glass) {
                 BlockPos corePos = glass.getCorePos();
 
+                if (!world.isClient) {
+                    BlockEntity be = world.getBlockEntity(pos);
+                    if (be instanceof GrowthChamberGlassEntity) {
+                        glass.forceNeighborsToCheckCoreOnBroken();
+                    }
+                }
+
                 if (corePos != null) {
                     BlockEntity coreEntity = world.getBlockEntity(corePos);
                     if (coreEntity instanceof GrowthChamberCoreEntity core) {
                         core.decrementConnectedCasings();
                     }
                 }
-                if (!world.isClient) {
-                    glass.forceNeighborsToCheckCoreOnBroken();
-                }
             }
 
             super.onStateReplaced(state, world, pos, newState, moved);
-        }
-    }
-
-    @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos,
-                               Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
-
-        if (!world.isClient) {
-            if (block.getDefaultState().isIn(ModTags.Blocks.CORE) || block.getDefaultState().isIn(ModTags.Blocks.CASING)) {
-                BlockEntity be = world.getBlockEntity(pos);
-                if (be instanceof GrowthChamberGlassEntity glass) {
-                    glass.checkForCoreBlocks();
-                }
-            }
         }
     }
 

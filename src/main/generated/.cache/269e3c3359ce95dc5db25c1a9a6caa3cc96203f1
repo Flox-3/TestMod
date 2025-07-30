@@ -1,10 +1,10 @@
-// 1.21	2025-06-03T11:19:39.883842215	Test Mod/Tags for minecraft:block
+// 1.21	2025-07-29T11:34:27.614377436	Test Mod/Tags for minecraft:block
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/testmod/tags/block/incorrect_for_osmium_tool.json
 3d297884bafab7c3ff9e2f1a5e10278e772687d2 data/minecraft/tags/block/mineable/pickaxe.json
 e00c31f7e5d7c57e771df6273a6273fe7736fcb5 data/minecraft/tags/block/fence_gates.json
 7b9040e5fb1f7efe02faab1f8a8f7016fb6b3fec data/testmod/tags/block/casing.json
-8fe0ff6c08fd0305f1227484eaa7a223fe3599d9 data/testmod/tags/block/core.json
 3d297884bafab7c3ff9e2f1a5e10278e772687d2 data/minecraft/tags/block/needs_iron_tool.json
+8fe0ff6c08fd0305f1227484eaa7a223fe3599d9 data/testmod/tags/block/core.json
 7890eb1a055ea1b4b28cb4a6f8f638f736caa527 data/minecraft/tags/block/fences.json
 1ead2cfff4822a96cc789bb9f4adf7aaf1ac1828 data/minecraft/tags/block/walls.json
 32b13946c4cd1f944b029659ccce5fcb2adad4ff data/testmod/tags/block/needs_osmium_tool.json

@@ -1,4 +1,4 @@
-// 1.21	2025-06-03T11:19:39.889556591	Test Mod/Block Loot Tables
+// 1.21	2025-07-29T11:34:27.61968003	Test Mod/Block Loot Tables
 cf18c23559e2f871cd583ff02b746194c7449a26 data/testmod/loot_table/blocks/osmium_fence_gate.json
 45211c5823d31f1b8ee36ebcd8bfb02a9a49bcb9 data/testmod/loot_table/blocks/osmium_stairs.json
 b3dd365c8b9772a469195d8e3f26798168d06598 data/testmod/loot_table/blocks/deepslate_osmium_ore.json

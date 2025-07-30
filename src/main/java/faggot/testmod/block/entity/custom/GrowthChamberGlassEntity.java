@@ -1,5 +1,6 @@
 package faggot.testmod.block.entity.custom;
 
+import faggot.testmod.block.custom.GrowthChamberCore;
 import faggot.testmod.block.entity.ModBlockEntities;
 import faggot.testmod.util.ModTags;
 import net.minecraft.block.BlockState;
@@ -99,7 +100,8 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         }
 
         unlinkFromCore();
-        sendMessage("Glass at " + pos + " is not connected to any core.");
+        markDirty();
+        sendMessage("Casing at " + pos + " is not connected to any core.");
     }
 
     public void unlinkFromCore() {
@@ -107,6 +109,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
             BlockEntity coreEntity = world.getBlockEntity(corePos);
             if (coreEntity instanceof GrowthChamberCoreEntity core) {
                 core.decrementConnectedCasings();
+                core.setInitializedfalse();
             }
         }
 
@@ -114,7 +117,6 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         coreCount = 0;
         linkedIndirectly = false;
         linkedViaCasing = null;
-        markDirty();
     }
 
     private void linkToCore(BlockPos corePos, String messageSource, boolean indirectly, @Nullable BlockPos viaCasing) {
@@ -127,7 +129,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         BlockEntity be = world.getBlockEntity(corePos);
         if (be instanceof GrowthChamberCoreEntity coreEntity) {
             coreEntity.incrementConnectedCasings();
-            sendMessage("Glass at " + pos + " connected " + messageSource + " at " + corePos +
+            sendMessage("Casing at " + pos + " connected " + messageSource + " at " + corePos +
                     " | Core casing count: " + coreEntity.getConnectedCasings());
 
             updateMultiblockSize(pos);
@@ -136,7 +138,6 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
                     new BlockPos(coreEntity.xMax, coreEntity.yMax, coreEntity.zMax)
             );
         }
-        markDirty();
     }
 
     public void forceNeighborsToCheckCore() {
@@ -152,10 +153,12 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
 
     public void forceNeighborsToCheckCoreOnBroken() {
         unlinkFromCore();
+        markDirty();
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
             if (neighborEntity instanceof MultiblockMember neighborMember) {
+                neighborMember.unlinkFromCore();
                 neighborMember.checkForCoreBlocks();
             }
         }
@@ -177,17 +180,17 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
 
 
     public void reset() {
+        BlockPos fortnite = corePos;
         unlinkFromCore();
 
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockEntity neighborBE = world.getBlockEntity(neighborPos);
 
-            if (neighborBE instanceof MultiblockMember neighborMember && neighborMember.getCoreCount() != 0) {
-                neighborMember,reset();
+            if (neighborBE instanceof MultiblockMember neighborMember && neighborMember.getCorePos() == fortnite) {
+                neighborMember.reset();
             }
         }
-        markDirty();
     }
 
 

@@ -3,6 +3,7 @@ package faggot.testmod.block.custom;
 import com.mojang.serialization.MapCodec;
 import faggot.testmod.block.entity.custom.GrowthChamberCasingEntity;
 import faggot.testmod.block.entity.custom.GrowthChamberCoreEntity;
+import faggot.testmod.block.entity.custom.MultiblockMember;
 import faggot.testmod.util.ModTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -48,9 +49,9 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
 
         if (!world.isClient) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof GrowthChamberCasingEntity casing) {
-                casing.checkForCoreBlocks();
-                casing.forceNeighborsToCheckCore();
+            if (be instanceof MultiblockMember member) {
+                member.checkForCoreBlocks();
+                member.forceNeighborsToCheckCore();
             }
         }
     }
@@ -82,24 +83,6 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
             super.onStateReplaced(state, world, pos, newState, moved);
         }
     }
-
-    @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos,
-                               Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
-
-        if (!world.isClient) {
-            // Check if the updating block is in the core or casing tags
-            if (block.getDefaultState().isIn(ModTags.Blocks.CORE) || block.getDefaultState().isIn(ModTags.Blocks.CASING)) {
-                BlockEntity be = world.getBlockEntity(pos);
-                if (be instanceof GrowthChamberCasingEntity casing) {
-                    casing.checkForCoreBlocks();
-                }
-            }
-        }
-    }
-
-
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
