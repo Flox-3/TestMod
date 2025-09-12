@@ -66,13 +66,13 @@ public class GrowthChamberGlass extends BlockWithEntity implements BlockEntityPr
                     BlockEntity be = world.getBlockEntity(pos);
                     if (be instanceof MultiblockMember ) {
                         multiblockMember.forceNeighborsToCheckCoreOnBroken();
+                        multiblockMember.unlinkFromCore();
                     }
                 }
 
                 if (corePos != null) {
                     BlockEntity coreEntity = world.getBlockEntity(corePos);
                     if (coreEntity instanceof GrowthChamberCoreEntity core) {
-                        core.decrementConnectedCasings();
                     }
                 }
             }

@@ -67,7 +67,6 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
     @Override
     public void checkForCoreBlocks() {
         if (corePos != null) {
-            unlinkFromCore();
         }
 
         for (Direction direction : Direction.values()) {
@@ -95,7 +94,6 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
             }
         }
 
-        unlinkFromCore();
         sendMessage("Glass at " + pos + " is not connected to any core.");
     }
 
@@ -157,8 +155,6 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
             if (neighborEntity instanceof MultiblockMember neighborMember) {
                 if (neighborMember.getCorePos() != null && neighborMember.getCorePos().equals(oldCore) && neighborMember.isLinkedIndirectly()) {
                     neighborMember.reset();
-                } else {
-                    neighborMember.checkForCoreBlocks();
                 }
             }
         }
