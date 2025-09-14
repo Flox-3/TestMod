@@ -18,6 +18,7 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
     private BlockPos corePos = null;
     private int coreCount = 0;
     private boolean linkedIndirectly = false;
+    private boolean MustReset = false;
     private BlockPos linkedViaCasing = null;
 
     public GrowthChamberCasingEntity(BlockPos pos, BlockState state) {
@@ -37,6 +38,11 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
     @Override
     public boolean isLinkedIndirectly() {
         return linkedIndirectly;
+    }
+
+    @Override
+    public boolean mustReset() {
+        return MustReset; // default: no reset needed
     }
 
     @Override
@@ -63,6 +69,8 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
     public void setCoreCount(int count) {
         this.coreCount = count;
     }
+
+
 
     @Override
     public void checkForCoreBlocks() {
@@ -95,8 +103,7 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
             }
         }
 
-        reset();
-        sendMessage("Casing at " + pos + " is not connected to any core.");
+        sendMessage("Glass at " + pos + " is not connected to any core.");
     }
 
     public void unlinkFromCore() {
@@ -104,7 +111,6 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
             BlockEntity coreEntity = world.getBlockEntity(corePos);
             if (coreEntity instanceof GrowthChamberCoreEntity core) {
                 core.decrementConnectedCasings();
-                core.setInitializedfalse();
             }
         }
 
@@ -112,6 +118,7 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
         coreCount = 0;
         linkedIndirectly = false;
         linkedViaCasing = null;
+        markDirty();
     }
 
     private void linkToCore(BlockPos corePos, String messageSource, boolean indirectly, @Nullable BlockPos viaCasing) {
@@ -120,6 +127,7 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
         setLinkedIndirectly(indirectly);
         setLinkedViaCasing(viaCasing);
         forceNeighborsToCheckCore();
+        MustReset = false;
 
         BlockEntity be = world.getBlockEntity(corePos);
         if (be instanceof GrowthChamberCoreEntity coreEntity) {
@@ -147,15 +155,23 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
     }
 
     public void forceNeighborsToCheckCoreOnBroken() {
-        reset();
+        BlockPos oldCore = this.corePos; // Store before unlinking
+        MustReset = true;
+        unlinkFromCore(); // Unlink this block
+
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+
             if (neighborEntity instanceof MultiblockMember neighborMember) {
-                neighborMember.checkForCoreBlocks();
+                if (neighborMember.getCorePos() != null && neighborMember.getCorePos().equals(oldCore) && neighborMember.isLinkedIndirectly()) {
+                    neighborMember.reset();
+                }
             }
         }
     }
+
+
 
     public void updateMultiblockSize(BlockPos casingPos) {
         if (corePos == null) return;
@@ -166,19 +182,56 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
         }
     }
 
-    public void reset() {
-        unlinkFromCore();
-        markDirty();
-    }
+    /**
+     * Reset this block's multiblock data and recursively reset neighbors.
+     * Avoid infinite loops by tracking visited positions.
+     */
 
-    public void notifyCoreOfCasingBreak() {
-        if (corePos != null) {
-            BlockEntity be = world.getBlockEntity(corePos);
-            if (be instanceof GrowthChamberCoreEntity coreEntity) {
-                coreEntity.setInitializedfalse();
+
+    public void reset() {
+        if (shouldSkipReset()) {
+            // Optionally keep a debug message:
+            // sendMessage("Skipping reset for " + pos + " because it's adjacent to the core at " + corePos);
+            markDirty();
+            return;
+        }
+
+        BlockPos fortnite = corePos;
+        unlinkFromCore();
+
+
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = pos.offset(direction);
+            BlockEntity neighborBE = world.getBlockEntity(neighborPos);
+
+            if (neighborBE instanceof MultiblockMember neighborMember && neighborMember.getCorePos() == fortnite) {
+                neighborMember.reset();
             }
         }
     }
+
+    private boolean shouldSkipReset() {
+        // No world or no core saved → cannot skip
+        if (world == null || corePos == null) return false;
+
+        if (!(world.getBlockEntity(corePos) instanceof GrowthChamberCoreEntity core) || core.MustReset) {
+            return false;
+        } else if (isLinkedIndirectly()) {
+            BlockEntity be = world.getBlockEntity(linkedViaCasing);
+
+            if (be instanceof MultiblockMember neighbor && neighbor.mustReset()) {
+                MustReset = true;
+                return false;
+            } else {
+                return true;
+            }
+
+        }
+
+        return true;
+    }
+
+
 
     private void sendMessage(String msg) {
         if (!world.isClient && world instanceof ServerWorld serverWorld) {
@@ -191,13 +244,13 @@ public class GrowthChamberCasingEntity extends BlockEntity implements Multiblock
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.writeNbt(nbt, registryLookup);
-        writeMultiblockDataToNbt(nbt);
+        writeMultiblockDataToNbt(nbt);  // Use interface default
     }
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
-        readMultiblockDataFromNbt(nbt);
+        readMultiblockDataFromNbt(nbt);  // Use interface default
     }
 
     public void ValidateMultiblock(BlockPos min, BlockPos max) {

@@ -46,6 +46,7 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
     public int zMax = pos.getZ();
     public boolean isMultiblockValid = true;
     public boolean isInitialized = false;
+    public boolean MustReset = false;
 
     public void incrementConnectedCasings() {
         connectedCasings++;
@@ -102,7 +103,6 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
         return connectedCasings;
     }
 
-
     public void forceNeighborsToCheckForCore() {
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
@@ -115,6 +115,7 @@ public class GrowthChamberCoreEntity extends BlockEntity implements ExtendedScre
     }
 
     public void reset() {
+        MustReset = true;
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
             BlockEntity neighborEntity = world.getBlockEntity(neighborPos);

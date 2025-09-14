@@ -18,6 +18,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
     private BlockPos corePos = null;
     private int coreCount = 0;
     private boolean linkedIndirectly = false;
+    private boolean MustReset = false;
     private BlockPos linkedViaCasing = null;
 
     public GrowthChamberGlassEntity(BlockPos pos, BlockState state) {
@@ -37,6 +38,11 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
     @Override
     public boolean isLinkedIndirectly() {
         return linkedIndirectly;
+    }
+
+    @Override
+    public boolean mustReset() {
+        return MustReset; // default: no reset needed
     }
 
     @Override
@@ -64,9 +70,12 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         this.coreCount = count;
     }
 
+
+
     @Override
     public void checkForCoreBlocks() {
         if (corePos != null) {
+            unlinkFromCore();
         }
 
         for (Direction direction : Direction.values()) {
@@ -118,6 +127,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         setLinkedIndirectly(indirectly);
         setLinkedViaCasing(viaCasing);
         forceNeighborsToCheckCore();
+        MustReset = false;
 
         BlockEntity be = world.getBlockEntity(corePos);
         if (be instanceof GrowthChamberCoreEntity coreEntity) {
@@ -146,6 +156,7 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
 
     public void forceNeighborsToCheckCoreOnBroken() {
         BlockPos oldCore = this.corePos; // Store before unlinking
+        MustReset = true;
         unlinkFromCore(); // Unlink this block
 
         for (Direction direction : Direction.values()) {
@@ -178,8 +189,16 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
 
 
     public void reset() {
+        if (shouldSkipReset()) {
+            // Optionally keep a debug message:
+            // sendMessage("Skipping reset for " + pos + " because it's adjacent to the core at " + corePos);
+            markDirty();
+            return;
+        }
+
         BlockPos fortnite = corePos;
         unlinkFromCore();
+
 
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.offset(direction);
@@ -191,14 +210,28 @@ public class GrowthChamberGlassEntity extends BlockEntity implements MultiblockM
         }
     }
 
+    private boolean shouldSkipReset() {
+        // No world or no core saved → cannot skip
+        if (world == null || corePos == null) return false;
 
-    public void notifyCoreOfCasingBreak() {
-        if (corePos != null) {
-            BlockEntity be = world.getBlockEntity(corePos);
-            if (be instanceof GrowthChamberCoreEntity coreEntity) {
+        if (!(world.getBlockEntity(corePos) instanceof GrowthChamberCoreEntity core) || core.MustReset) {
+            return false;
+        } else if (isLinkedIndirectly()) {
+            BlockEntity be = world.getBlockEntity(linkedViaCasing);
+
+            if (be instanceof MultiblockMember neighbor && neighbor.mustReset()) {
+                MustReset = true;
+                return false;
+            } else {
+                return true;
             }
+
         }
+
+        return true;
     }
+
+
 
     private void sendMessage(String msg) {
         if (!world.isClient && world instanceof ServerWorld serverWorld) {

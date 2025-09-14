@@ -9,6 +9,7 @@ public interface MultiblockMember {
     void setCorePos(@Nullable BlockPos pos);
 
     boolean isLinkedIndirectly();
+    boolean mustReset();
     void setLinkedIndirectly(boolean indirect);
 
     @Nullable BlockPos getLinkedViaCasing();

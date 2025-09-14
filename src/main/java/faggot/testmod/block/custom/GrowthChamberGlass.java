@@ -31,12 +31,7 @@ public class GrowthChamberGlass extends BlockWithEntity implements BlockEntityPr
     @Override
     protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
                                              PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof GrowthChamberGlassEntity glass) {
-                glass.checkForCoreBlocks();
-            }
-        }
+
         return ItemActionResult.SUCCESS;
     }
 

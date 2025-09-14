@@ -32,12 +32,7 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
     @Override
     protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
                                              PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof GrowthChamberCasingEntity casing) {
-                casing.checkForCoreBlocks();
-            }
-        }
+
         return ItemActionResult.SUCCESS;
     }
 
@@ -68,13 +63,6 @@ public class GrowthChamberCasing extends BlockWithEntity implements BlockEntityP
                     BlockEntity be = world.getBlockEntity(pos);
                     if (be instanceof GrowthChamberCasingEntity) {
                         casing.forceNeighborsToCheckCoreOnBroken();
-                    }
-                }
-
-                if (corePos != null) {
-                    BlockEntity coreEntity = world.getBlockEntity(corePos);
-                    if (coreEntity instanceof GrowthChamberCoreEntity core) {
-                        core.decrementConnectedCasings();
                     }
                 }
 
